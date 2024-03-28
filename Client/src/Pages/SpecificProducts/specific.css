@@ -1,0 +1,10 @@
+.specific_cat {
+  display: flex;
+  width: 85vw;
+  min-height: 90vh;
+  height: auto;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  height: auto;
+}

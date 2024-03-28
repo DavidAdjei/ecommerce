@@ -1,0 +1,225 @@
+.header {
+  width: 100%;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  background-color: lightblue;
+}
+
+.nav {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav_welcome {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.nav_logo {
+  width: 100%;
+  height: 100%;
+}
+
+.nav_logo img {
+  width: 100%;
+  height: 100%;
+}
+
+.button_container {
+  display: flex;
+  gap: 1rem;
+  height: 100%;
+  align-items: center;
+}
+
+.button_container button {
+  height: 40%;
+  outline: none;
+  border: none;
+  background-color: rgb(4, 175, 118);
+  color: white;
+  padding-inline: 1rem;
+  border-radius: 0.3rem;
+}
+
+.button_container button:hover {
+  background-color: white;
+  color: rgb(4, 175, 118);
+  border: 1px solid rgb(4, 175, 118);
+  cursor: pointer;
+}
+
+/* footer */
+.footer {
+  padding-inline: 2rem;
+  padding-top: 3rem;
+  width: 100vw;
+  height: 20rem;
+  background-color: black;
+  color: white;
+  display: flex;
+}
+
+.company_info {
+  width: 35%;
+  height: 100%;
+}
+
+/* Cart */
+
+.cart {
+  display: flex;
+  flex-direction: column;
+  width: 40rem;
+  height: 100vh;
+  overflow-y: scroll;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  right: 1rem;
+}
+
+.cart_head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 2rem;
+  padding-block: 1rem;
+}
+
+.cart_head h2 {
+  font-size: 1.5rem;
+}
+
+.cart_head button {
+  outline: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.cart_orders {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cart_orders th,
+.cart_orders td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.cart_orders td {
+  height: auto;
+}
+
+.cart_orders th {
+  background-color: #f2f2f2;
+}
+
+.cart_orders td button {
+  background-color: rgb(4, 175, 118);
+  color: white;
+  border: none;
+  border-radius: 0.2rem;
+  padding: 5px 7px;
+  cursor: pointer;
+}
+
+.cart_orders td button:hover {
+  background-color: #0056b3;
+}
+
+.cart_orders td p {
+  margin: 0;
+}
+
+.cart_orders .item_image img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.order_quantity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.order_quantity button {
+  padding: 5px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+}
+
+.order_quantity p {
+  margin: 0 10px;
+}
+
+.cart_orders-item:hover {
+  background-color: #f9f9f9;
+}
+button:hover {
+  cursor: pointer;
+}
+
+/* Category */
+
+.categories_menu {
+  width: 15rem;
+  height: auto;
+  background-color: lightblue;
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.categories_menu h2 {
+  font: 1.1rem;
+  padding-block: 0.5rem;
+}
+
+.categories_menu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.categories_menu ul li button {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.categories_menu ul li button:hover {
+  color: white;
+}
+
+hr {
+  border: 1px solid #7e7e7e;
+  margin-block: 1rem;
+  margin-right: 1rem;
+}
+
+.admin_nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

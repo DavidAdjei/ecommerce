@@ -1,7 +1,8 @@
 import React, { useContext, createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+axios.defaults.baseURL ="https://ecommerce-server-ecru.vercel.app"
+axios.defaults.withCredentials = true;
 const UserContext = createContext();
 
 
@@ -16,7 +17,7 @@ export const UserProvider = ({ children }) => {
 
      useEffect(() => {
         const fetchUsers = () => {
-            axios.get("http://localhost:8000/users")
+            axios.get("/users")
                 .then(response => {
                     setUsers(response.data.users);
                     console.log(response.data.users)
@@ -30,7 +31,7 @@ export const UserProvider = ({ children }) => {
     }, []);
 
     const login =(email, password, setLoading, setError) => {
-            axios.post(`http://localhost:8000/signin`, {
+            axios.post(`/signin`, {
                 email,
                 password,
             }).then((response) => {
@@ -52,7 +53,7 @@ export const UserProvider = ({ children }) => {
     }
     
     const signin = (name, email, password, setLoading, setError) => {
-        axios.post(`http://localhost:8000/signUp`, {
+        axios.post(`/signUp`, {
                 name,
                 email,
                 password,

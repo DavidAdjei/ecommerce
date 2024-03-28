@@ -15,7 +15,7 @@ mongoose.connect(process.env.DATABASE)
 app.use(express.json({ limit: "4mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ["https://ecommerce-server-ecru.vercel.app"],
+    origin: [""],
     methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 app.use(morgan("dev"));

@@ -15,7 +15,7 @@ export const ProductsProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchProducts = () => {
-            axios.get("http://localhost:8000/products")
+            axios.get("ecommerce-server-ecru.vercel.app/products")
                 .then(response => {
                     setProducts(response.data.products);
                 })

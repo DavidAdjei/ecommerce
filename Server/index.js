@@ -14,9 +14,15 @@ mongoose.connect(process.env.DATABASE)
        
 app.use(express.json({ limit: "4mb" }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+    origin: ["https://ecommerce-server-ecru.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+}));
 app.use(morgan("dev"));
 
+app.get('/', (req, res) => {
+    res.send('Server is running');
+});
 app.use('/', authRoutes);
 
 const port = process.env.PORT || 8000;

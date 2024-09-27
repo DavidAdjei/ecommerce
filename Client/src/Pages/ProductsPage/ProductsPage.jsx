@@ -12,7 +12,7 @@ import { getCategories, setFilteredProducts } from '../../redux/Actions/productA
 const ProductsPage = ({ products, getCategories, setFilteredProducts, filteredProducts }) => {
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 9;
   
   const [searchParams] = useSearchParams();
   const categoryFromQuery = searchParams.get('category');

@@ -11,7 +11,7 @@ const ProductCard = ({ product }) => {
         <img src={product.imgs[0]} alt={product.title} />
         <h3>{product.title}</h3>
         <p>
-          Price: GH&#8373;
+          GH&#8373;
           {product.price}
         </p>
       </Link>

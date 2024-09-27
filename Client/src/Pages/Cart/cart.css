@@ -2,11 +2,11 @@
   display: flex;
   max-height: calc(100vh - 5rem);
   flex-direction: column;
-  padding: 1rem;
-  gap: 1rem;
-  width: auto;
+  padding: 2rem 4rem;
+  /* gap: 1rem; */
+  width: 80%;
   margin: 2rem auto;
-  font-family: Arial, sans-serif;
+
   background-color: #f9f9f9;
   border-radius: 0.7rem;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -15,7 +15,7 @@
 .cart-container h2 {
   text-align: center;
   font-size: 1.8rem;
-  color: #333;
+  color: rgb(48, 47, 47);
 }
 
 .table-wrapper {
@@ -25,6 +25,7 @@
   min-height: calc(100vh - 88px - 10rem);
   overflow-y: auto;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+  margin-top: 50px;
 }
 
 .cart-table {
@@ -39,6 +40,9 @@
   text-align: left;
   vertical-align: middle;
 }
+.cart-table td {
+  font-size: 14px;
+}
 
 .cart-table th {
   background-color: #f1f1f1;
@@ -46,6 +50,8 @@
   position: sticky;
   top: 0;
   z-index: 1;
+  color: rgb(48, 47, 47);
+  font-weight: 500;
 }
 
 .cart-footer {
@@ -57,19 +63,13 @@
 }
 
 .back-button {
-  background-color: #3498db;
-  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: gray;
   position: absolute;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 0.3rem;
-  cursor: pointer;
-  width: 150px;
   text-align: center;
-}
-
-.back-button:hover {
-  background-color: #2980b9;
+  text-decoration: none;
 }
 
 .subtotal {

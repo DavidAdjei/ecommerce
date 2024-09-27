@@ -207,6 +207,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 30px;
 }
 
 .remove-item {
@@ -231,4 +232,3 @@
   border-radius: 4px;
   font-size: 1rem;
 }
-

@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import CartItem from "../../component/CartItem";
 import "./cart.css";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 export const Cart = ({ cart }) => {
   const navigate = useNavigate();
@@ -23,9 +24,10 @@ export const Cart = ({ cart }) => {
 
   return (
     <div className="cart-container">
-      <button className="back-button" onClick={() => navigate("/all-products")}>
-        Back to Shop
-      </button>
+      <Link to="/shop" className="back-button">
+        <IoIosArrowRoundBack size={30} />
+        Continue shopping
+      </Link>
       <h2>Your Shopping Cart</h2>
       <div className="table-wrapper">
         <table className="cart-table">

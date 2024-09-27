@@ -2,7 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./Routes/auth");
-const productRoutes = require("./Routes/products")
+const productRoutes = require("./Routes/products");
+const categoryRoutes = require("./Routes/categories")
 const cors = require('cors');
 const morgan = require("morgan");
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
+app.use('/categories', categoryRoutes)
 
 const port = process.env.PORT || 8000;
 

@@ -24,8 +24,6 @@
   max-height: calc(100vh - 88px - 10rem);
   min-height: calc(100vh - 88px - 10rem);
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #ddd transparent;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
 }
 

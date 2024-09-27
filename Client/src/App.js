@@ -18,16 +18,11 @@ import About from "./Pages/About/About";
 
 const App = ({ getProducts, setFeaturedProducts }) => {
   useEffect(() => {
-    getProducts()
-      .then((res) => {
-        const popular = res.products.filter(
-          (product) => product.popular === true
-        );
-        console.log(popular);
-        setFeaturedProducts(popular);
-      })
-      .catch((err) => console.log(err));
-  }, [getProducts, setFeaturedProducts]);
+    getProducts().then((res) => {
+      const popular = res.products.filter(product => product.popular === true);
+      setFeaturedProducts(popular);
+    }).catch((err => console.log(err)));
+  },[getProducts, setFeaturedProducts])
   return (
     <div className="App">
       <NavBar />

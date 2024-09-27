@@ -3,6 +3,7 @@
   height: 5rem;
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: lightblue;
 }
 
@@ -38,8 +39,8 @@
 }
 
 .nav {
-  width: 80%;
-  height: 100%;
+  width: 100%;
+  height: 10vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -50,6 +51,7 @@
   height: 3rem;
   border-radius: 50%;
   overflow: hidden;
+  margin: 30px;
 }
 
 .nav_logo {
@@ -62,30 +64,91 @@
   height: 100%;
 }
 
-.button_container {
+.left a {
+  font-size: 15px;
+  text-decoration: none;
+  font-weight: 500;
+  color: rgb(48, 47, 47);
+}
+.left {
   display: flex;
-  gap: 1rem;
+  gap: 3rem;
   height: 100%;
   align-items: center;
+  margin: 30px;
+}
+.left a:hover {
+  color: #e74c3c;
 }
 
-.button_container button {
-  height: 40%;
+.right {
+  display: flex;
+  gap: 2rem;
+  height: 100%;
+  align-items: center;
+  margin: 30px;
+  margin-right: 150px;
+}
+
+.right a {
+  text-decoration: none;
+
+  color: rgb(48, 47, 47);
+}
+.right a:hover {
+  color: #e74c3c;
+}
+
+.search_input {
   outline: none;
+  width: 30rem;
+  height: 35px;
   border: none;
-  background-color: rgb(4, 175, 118);
-  color: white;
-  padding-inline: 1rem;
-  border-radius: 0.3rem;
+  padding: 10px;
+  font-size: 15px;
+  color: rgb(14, 109, 101);
+}
+.search_input:focus {
+  border: none;
+  border-style: none;
 }
 
-.button_container button:hover {
-  background-color: white;
-  color: rgb(4, 175, 118);
-  border: 1px solid rgb(4, 175, 118);
+.search_input::placeholder {
+  font-size: 14px;
+  padding: 20px;
+}
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.banner img {
+  width: 100%;
+  height: 40rem;
+  background-size: contain; /* Or use 'cover' to make the image cover the whole container */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.banner button {
+  position: absolute; /* Position the button on top */
+  top: 50%; /* Adjust top position */
+  left: 50%; /* Adjust left position */
+  transform: translate(-50%, -50%); /* Center the button */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Add a background to make it more visible */
+  padding: 10px 20px;
+  border: none;
   cursor: pointer;
+  font-size: 16px;
+  z-index: 1; /* Ensure the button is above the image */
 }
-
 /* footer */
 .footer {
   padding-inline: 2rem;

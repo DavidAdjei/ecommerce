@@ -1,4 +1,4 @@
-import { SET_CATEGORIES, SET_FEATURED_PRODUCT, SET_PRODUCTS, SET_SELECTED_PRODUCT } from "../constants";
+import { SET_CATEGORIES, SET_FEATURED_PRODUCT, SET_PRODUCTS, SET_SELECTED_PRODUCT, SET_FILTERED_PRODUCTS } from "../constants";
 import axios from "axios"
 
 export const setProducts = (products) => ({
@@ -11,10 +11,16 @@ export const setFeaturedProducts = (products) => ({
     payload: products
 })
 
+export const setFilteredProducts = (products) => ({
+    type: SET_FILTERED_PRODUCTS,
+    payload: products
+})
+
 export const setSelectedProduct = (product) => ({
     type: SET_SELECTED_PRODUCT,
     payload: product
 })
+
 export const setCategories = (categories) => ({
     type: SET_CATEGORIES,
     payload: categories

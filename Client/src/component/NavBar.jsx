@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { Link } from "react-router-dom";
 import "./component.css";
 import Logo from "../assets/images/Logo.jpeg";
@@ -6,12 +8,17 @@ import { IoPersonOutline } from "react-icons/io5";
 import { IoCartOutline } from "react-icons/io5";
 import { IoIosSearch } from "react-icons/io";
 
-export default function NavBar() {
-  // const navigate = useNavigate();
+function NavBar() {
+  const [keyword, setKeyword] = useState("");
+  const [query, setQuery] = useState(new URLSearchParams())
 
-  // const handleSignUpClick = () => {
-  //   console.log("Clicked");
-  // };
+  const handleSearchChange = (e) => {
+    setKeyword(e.target.value);
+    const query = new URLSearchParams({
+        searchKeyword: keyword,
+    });
+    setQuery(query);
+  }
 
   return (
     <header className="header">
@@ -38,13 +45,15 @@ export default function NavBar() {
 
         <div className="right">
           <input
+            onChange={handleSearchChange}
+            value={keyword}
             className="search_input"
             type="text"
-            placeholder="search..."
+            placeholder="Search with name"
             autoCorrect="false"
             autoComplete="false"
           />
-          <Link>
+          <Link to={`/shop?${query.toString()}`}>
             <IoIosSearch size={30} className="search_button" />
           </Link>
           <Link to="/profile">
@@ -58,3 +67,12 @@ export default function NavBar() {
     </header>
   );
 }
+
+NavBar.propTypes = {
+}
+
+const mapStateToProps = (state) => ({
+})
+
+
+export default connect(mapStateToProps, {})(NavBar)

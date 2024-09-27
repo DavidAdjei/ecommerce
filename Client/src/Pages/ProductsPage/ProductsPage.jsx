@@ -7,16 +7,16 @@ import Pagination from '@mui/material/Pagination';
 import "./products.css";
 import Filter from '../../component/Filter';
 import Button from '@mui/material/Button';
-import { getCategories } from '../../redux/Actions/productActions';
+import { getCategories, setFilteredProducts } from '../../redux/Actions/productActions';
 
-const ProductsPage = ({ products, getCategories }) => {
+const ProductsPage = ({ products, getCategories, setFilteredProducts, filteredProducts }) => {
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(1);
   const itemsPerPage = 20;
-  const [filteredProducts, setFilteredProducts] = useState(products);
-
+  
   const [searchParams] = useSearchParams();
   const categoryFromQuery = searchParams.get('category');
+  const searchKeyword = searchParams.get('searchKeyword');
 
   const filtersFromQuery = useMemo(() => {
     const filters = searchParams.get('filters');
@@ -72,7 +72,17 @@ const ProductsPage = ({ products, getCategories }) => {
       setFilteredProducts(filtered)
     };
   filter();
-}, [products, categoryFromQuery, filtersFromQuery, getCategories, setFilteredProducts]);
+   }, [products, categoryFromQuery, filtersFromQuery, getCategories, setFilteredProducts]);
+  
+  useEffect(() => {
+    if (searchKeyword) {
+      const newProducts = products.filter((product) =>
+        product.title.toLowerCase().includes(searchKeyword.toLowerCase())
+      );
+      console.log(newProducts)
+      setFilteredProducts(newProducts)
+    }
+  }, [products, searchKeyword, setFilteredProducts]);
 
   return (
     <div className='product_page'>
@@ -110,11 +120,13 @@ const ProductsPage = ({ products, getCategories }) => {
 
 ProductsPage.propTypes = {
   products: PropTypes.array.isRequired,
-  getCategories: PropTypes.func
+  getCategories: PropTypes.func,
+  setFilteredProducts: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({
   products: state.product.products,
+  filteredProducts: state.product.filteredProducts
 });
 
-export default connect(mapStateToProps, {getCategories})(ProductsPage);
+export default connect(mapStateToProps, {getCategories, setFilteredProducts})(ProductsPage);

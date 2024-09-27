@@ -9,9 +9,9 @@ import { IoIosSearch } from "react-icons/io";
 export default function NavBar() {
   // const navigate = useNavigate();
 
-  const handleSignUpClick = () => {
-    console.log("Clicked");
-  };
+  // const handleSignUpClick = () => {
+  //   console.log("Clicked");
+  // };
 
   return (
     <header className="header">
@@ -22,10 +22,18 @@ export default function NavBar() {
               <img src={Logo} alt="Logo" />
             </Link>
           </h1>
-          <Link to="/">Home</Link>
-          <Link to="/shop">Shop</Link>
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
+          <Link to="/" activeClassName="active">
+            Home
+          </Link>
+          <Link to="/shop" activeClassName="active">
+            Shop
+          </Link>
+          <Link to="/about" activeClassName="active">
+            About
+          </Link>
+          <Link to="/contact" activeClassName="active">
+            Contact
+          </Link>
         </div>
 
         <div className="right">

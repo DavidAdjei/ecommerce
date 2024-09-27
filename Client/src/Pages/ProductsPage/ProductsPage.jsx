@@ -19,13 +19,15 @@ const ProductsPage = ({ products }) => {
 
   return (
     <div className='product_page'>
-      {currentProducts.length > 0 ? (
-        currentProducts.map((product, index) => (
-          <ProductCard product={product} key={index} />
-        ))
-      ) : (
-        <p>No products available</p>
-      )}
+      <div className='product_list'>
+        {currentProducts.length > 0 ? (
+          currentProducts.map((product, index) => (
+            <ProductCard product={product} key={index} />
+          ))
+        ) : (
+          <p>No products available</p>
+        )}
+      </div>
       {totalPages > 1 && (
         <Pagination
           count={totalPages}

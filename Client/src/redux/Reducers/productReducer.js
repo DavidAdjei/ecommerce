@@ -1,9 +1,9 @@
-const { SET_PRODUCTS, SET_FEATURED_PRODUCT, SET_SELECTED_PRODUCT } = require("../constants");
+const { SET_PRODUCTS, SET_FEATURED_PRODUCT, SET_SELECTED_PRODUCT} = require("../constants");
 
 const initialState = {
     products: [],
     featuredProducts: [],
-    selectedProduct: null,
+    selectedProduct: null
 }
 
 

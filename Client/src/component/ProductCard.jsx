@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import './component.css';
 
 const ProductCard = ({product}) => {
   return (

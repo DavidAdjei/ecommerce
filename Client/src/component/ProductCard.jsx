@@ -3,18 +3,27 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import "./component.css";
+import { addToCart } from "../redux/Actions/cartActions";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, selectedProduct }) => {
   return (
     <div className="product-card">
       <Link to={`/product/${product._id}`}>
         <img src={product.imgs[0]} alt={product.title} />
         <h3>{product.title}</h3>
-        <p>
-          GH&#8373;
-          {product.price}
-        </p>
       </Link>
+      <p>
+        GH&#8373;
+        {product.price}
+      </p>
+      <button
+        className="addToCartButton"
+        onClick={() => {
+          addToCart(selectedProduct);
+        }}
+      >
+        ADD TO CART
+      </button>
     </div>
   );
 };

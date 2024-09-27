@@ -1,14 +1,12 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import CartItem from "../../component/CartItem";
 import "./cart.css";
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 export const Cart = ({ cart }) => {
-  const navigate = useNavigate();
-
   const calculateTot = () => {
     let total = 0;
     Object.values(cart).forEach((item) => {

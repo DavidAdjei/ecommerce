@@ -9,6 +9,7 @@ import Footer from './component/footer';
 import { getProducts, setFeaturedProducts } from './redux/Actions/productActions';
 import ProductsPage from './Pages/ProductsPage/ProductsPage';
 import ProductDetails from './Pages/ProductDetails/ProductDetails';
+import Cart from './Pages/Cart/Cart';
 
 const App = ({ getProducts, setFeaturedProducts }) => {
   useEffect(() => {
@@ -26,6 +27,7 @@ const App = ({ getProducts, setFeaturedProducts }) => {
             <Route path="/" exact element={<Homepage/>} />
             <Route path="/product/:id" element={<ProductDetails/>} />
             <Route path="/all-products" element={<ProductsPage/>} /> 
+            <Route path='/cart' element={ <Cart/> } />
           </Routes> 
       </div>
       <Footer/>

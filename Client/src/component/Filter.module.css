@@ -1,0 +1,42 @@
+.filterContainer {
+  position: absolute;
+  left: 0;
+  top: 5rem;
+  display: block;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 250px;
+  max-height: 50rem;
+  overflow-y: auto;
+}
+
+.toggleButton,
+.applyButton {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.applyButton {
+  background-color: #28a745;
+}
+
+.categorySelect {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.filterOption {
+  margin-bottom: 5px;
+}

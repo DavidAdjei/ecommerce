@@ -40,7 +40,7 @@ const Filter = ({ setVisible, categories }) => {
             filters: JSON.stringify(selectedFilters),
         });
         setVisible(false);
-        navigate(`/all-products?${query.toString()}`); // Navigate to all-products with query params
+        navigate(`/shop?${query.toString()}`); // Navigate to all-products with query params
     };
 
     return (

@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: lightblue;
+  background-color: #f5f5f5;
 }
 
 .product-card {
@@ -149,6 +149,7 @@
   font-size: 16px;
   z-index: 1; /* Ensure the button is above the image */
 }
+
 /* footer */
 .footer {
   padding-inline: 2rem;

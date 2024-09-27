@@ -1,34 +1,55 @@
-import PropTypes from 'prop-types'
-import React, { useEffect } from 'react';
-import './ProductDetails.css'
-import { useParams } from 'react-router-dom';
-import { connect } from 'react-redux'
-import { getSelectedProduct } from '../../redux/Actions/productActions'
-import Button from '@mui/material/Button';
-import { Rating } from '@mui/material';
-import { addToCart } from '../../redux/Actions/cartActions';
+import PropTypes from "prop-types";
+import React, { useEffect } from "react";
+import "./ProductDetails.css";
+import { useParams } from "react-router-dom";
+import { connect } from "react-redux";
+import { getSelectedProduct } from "../../redux/Actions/productActions";
+import Button from "@mui/material/Button";
+import { Rating } from "@mui/material";
+import { addToCart } from "../../redux/Actions/cartActions";
 
-const ProductDetails = ({ getSelectedProduct, selectedProduct, cart, addToCart }) => {
+const ProductDetails = ({
+  getSelectedProduct,
+  selectedProduct,
+  cart,
+  addToCart,
+}) => {
   const { id } = useParams();
 
   useEffect(() => {
-    fetchProduct()
+    fetchProduct();
   }, []);
 
   const fetchProduct = () => {
-    getSelectedProduct(id).catch((err) => console.log(err))
-  }
+    getSelectedProduct(id).catch((err) => console.log(err));
+  };
 
   if (!selectedProduct) return <div>Loading...</div>;
 
   return (
     <div className="product-details">
-      <div className='product-details-left'>
+      <div className="product-details-left">
         <h2>{selectedProduct?.title}</h2>
         <img src={selectedProduct?.imgs[0]} alt={selectedProduct?.title} />
-        <p className='details-price'>GHS{selectedProduct?.price}</p>
-        <Rating readOnly value={selectedProduct.rating} size='large' precision={0.1}/>
-        <Button onClick={() => { addToCart(selectedProduct); console.log(cart); }} variant='contained' color="secondary" sx={{alignSelf: "center"}}>
+        <p className="details-price">
+          GH&#8373;
+          {selectedProduct?.price}
+        </p>
+        <Rating
+          readOnly
+          value={selectedProduct.rating}
+          size="large"
+          precision={0.1}
+        />
+        <Button
+          onClick={() => {
+            addToCart(selectedProduct);
+            console.log(cart);
+          }}
+          variant="contained"
+          color="secondary"
+          sx={{ alignSelf: "center" }}
+        >
           Add to cart
         </Button>
       </div>
@@ -39,15 +60,21 @@ const ProductDetails = ({ getSelectedProduct, selectedProduct, cart, addToCart }
             <li key={index}>{spec}</li>
           ))}
         </ul>
-        <h3>Reviews</h3>
+        {/* <h3>Reviews</h3>
         {selectedProduct?.reviews.map((review, index) => (
           <div key={index}>
-            <h4 style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              {review.title} <Rating size='small' value={review.rating} readOnly precision={0.1} />
+            <h4 style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              {review.title}{" "}
+              <Rating
+                size="small"
+                value={review.rating}
+                readOnly
+                precision={0.1}
+              />
             </h4>
             <p>{review.content}</p>
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );
@@ -55,16 +82,16 @@ const ProductDetails = ({ getSelectedProduct, selectedProduct, cart, addToCart }
 
 ProductDetails.propTypes = {
   getSelectedProduct: PropTypes.func,
-  addToCart: PropTypes.func
-}
+  addToCart: PropTypes.func,
+};
 
 const mapStateToProps = (state) => {
   return {
     selectedProduct: state.product.selectedProduct,
-    cart: state.cart.cart
+    cart: state.cart.cart,
   };
-}
-  
+};
 
-
-export default connect(mapStateToProps, {getSelectedProduct, addToCart})(ProductDetails)
+export default connect(mapStateToProps, { getSelectedProduct, addToCart })(
+  ProductDetails
+);

@@ -42,7 +42,7 @@ const CartItem = ({ item, increment, decrement, removeFromCart }) => {
       </td>
       <td className="item-qty">
         <button onClick={decrease}>-</button>
-        <span>{item.quantity}</span>
+        <span style={{ fontSize: 14 }}>{item.quantity}</span>
         <button onClick={increse}>+</button>
       </td>
       <td className="item-price">

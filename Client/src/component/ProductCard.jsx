@@ -4,13 +4,14 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import "./component.css";
 import { addToCart } from "../redux/Actions/cartActions";
+import { IoCartOutline } from "react-icons/io5";
 
 const ProductCard = ({ product, addToCart }) => {
   return (
     <div className="product-card">
       <Link to={`/product/${product._id}`}>
         <img src={product.imgs[0]} alt={product.title} />
-        <h3>{product.title}</h3>
+        <p className="product-name">{product.title}</p>
       </Link>
       <p>
         GH&#8373;
@@ -22,7 +23,7 @@ const ProductCard = ({ product, addToCart }) => {
           addToCart(product);
         }}
       >
-        ADD TO CART
+        <IoCartOutline size={20} style={{ marginRight: "8" }} /> Add to cart
       </button>
     </div>
   );
@@ -34,4 +35,4 @@ ProductCard.propTypes = {
 
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, {addToCart})(ProductCard);
+export default connect(mapStateToProps, { addToCart })(ProductCard);

@@ -3,18 +3,26 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    name: { 
-        type: String 
+    firstName: { 
+        type: String,
+        required: true,
     },
+    lastame: {
+        type: String,
+        required: true,
+    }
     email: { 
-        type: String 
+        type: String,
+        required: true,
+        unique: true,
     },
     password: { 
-        type: String 
+        type: String,
+        required: true
     },
     role: {
         type: String,
-        default: "Subscriber",
+        default: "Buyer",
     },
     image: {
         public_id: {

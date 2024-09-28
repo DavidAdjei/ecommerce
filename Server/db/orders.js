@@ -13,9 +13,12 @@ const orderSchema = new Schema({
         default: Date.now 
     },
     orderItems: [{
-        product: {
+        title: {
             type: String,
             required: true
+        },
+        specification:{
+            type: [mongoose.Schema.Types.Mixed],
         },
         quantity: {
             type: Number,
@@ -38,6 +41,9 @@ const orderSchema = new Schema({
     deliveryAddress: {
         type: String,
         required: true
+    },
+    image:{
+        type: [String],
     }
 });
 

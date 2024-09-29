@@ -17,7 +17,6 @@ export const Cart = ({ cart, placeOrder, user }) => {
     });
     return total;
   };
-
   // if (Object.values(cart).length === 0) {
   //     return <p>Cart is empty</p>;
   // }
@@ -36,40 +35,56 @@ export const Cart = ({ cart, placeOrder, user }) => {
 
   return (
     <div className="cart-container">
-      <Link to="/shop" className="back-button">
-        <IoIosArrowRoundBack size={30} />
-        Continue shopping
-      </Link>
-      <h2>Your Shopping Cart</h2>
-      <div className="table-wrapper">
-        <table className="cart-table">
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Details</th>
-              <th>Type</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Remove</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.values(cart).map((item) => (
-              <CartItem key={item.product._id} item={item} />
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {Object.keys(cart).length === 0 ? (
+        <p
+          style={{
+            fontSize: 18,
+            textAlign: "center",
+            fontWeight: 400,
+            color: "gray",
+          }}
+        >
+          Your cart is empty
+        </p>
+      ) : (
+        <div>
+          <Link to="/shop" className="back-button">
+            <IoIosArrowRoundBack size={30} />
+            Continue shopping
+          </Link>
 
-      <div className="cart-footer">
-        <div className="subtotal">
-          Subtotal: <strong>GHS </strong>
-          {calculateTot().toFixed(2)}
+          <h2>Your Shopping Cart</h2>
+          <div className="table-wrapper">
+            <table className="cart-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Details</th>
+                  <th>Type</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Remove</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.values(cart).map((item) => (
+                  <CartItem key={item.id} item={item} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="cart-footer">
+            <div className="subtotal">
+              Subtotal: <strong>GHS </strong>
+              {calculateTot().toFixed(2)}
+            </div>
+            <button className="checkout" onClick={submitOrder}>Proceed to Checkout</button>
+          </div>
         </div>
-        <button className="checkout" onClick={submitOrder}>Proceed to Checkout</button>
-      </div>
+      )
+      };
     </div>
-  );
+  )
 };
 
 Cart.propTypes = {

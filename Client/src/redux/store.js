@@ -6,10 +6,12 @@ import { thunk } from 'redux-thunk';
 import { combineReducers } from 'redux';
 import productReducer from './Reducers/productReducer';
 import cartReducer from './Reducers/cartReducer';
+import authReducer from './Reducers/authReducer';
 
 const rootReducer = combineReducers({
   product: productReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  auth: authReducer
 });
 
 const persistConfig = {

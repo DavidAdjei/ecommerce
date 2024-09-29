@@ -8,3 +8,6 @@ export const INCREMENT = "INCREMENT";
 export const DECREMENT = "DECREMENT";
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 export const SET_CATEGORIES = "SET_CATEGORIES";
+export const SET_USER = "SET_USER";
+export const SET_AUTH = "SET_AUTH";
+export const SET_ERROR = "SET_ERROR";

@@ -1,12 +1,14 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import CartItem from "../../component/CartItem";
 import "./cart.css";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { placeOrder } from "../../redux/Actions/cartActions";
 
-export const Cart = ({ cart }) => {
+export const Cart = ({ cart, placeOrder, user }) => {
+  const navigate = useNavigate();
   const calculateTot = () => {
     let total = 0;
     Object.values(cart).forEach((item) => {
@@ -19,6 +21,18 @@ export const Cart = ({ cart }) => {
   // if (Object.values(cart).length === 0) {
   //     return <p>Cart is empty</p>;
   // }
+
+  const submitOrder = () => {
+    if (!user) {
+      alert("You need to log in first");
+      const query = new URLSearchParams({
+        page: 'cart',
+      });
+      navigate(`/login?${query.toString()}`);
+    } else {
+      placeOrder(user._id, cart)
+    }
+  }
 
   return (
     <div className="cart-container">
@@ -41,7 +55,7 @@ export const Cart = ({ cart }) => {
           </thead>
           <tbody>
             {Object.values(cart).map((item) => (
-              <CartItem key={item.id} item={item} />
+              <CartItem key={item.product._id} item={item} />
             ))}
           </tbody>
         </table>
@@ -52,7 +66,7 @@ export const Cart = ({ cart }) => {
           Subtotal: <strong>GHS </strong>
           {calculateTot().toFixed(2)}
         </div>
-        <button className="checkout">Proceed to Checkout</button>
+        <button className="checkout" onClick={submitOrder}>Proceed to Checkout</button>
       </div>
     </div>
   );
@@ -64,6 +78,7 @@ Cart.propTypes = {
 
 const mapStateToProps = (state) => ({
   cart: state.cart.cart,
+  user: state.auth.user
 });
 
-export default connect(mapStateToProps, {})(Cart);
+export default connect(mapStateToProps, {placeOrder})(Cart);

@@ -9,7 +9,8 @@
 }
 
 .auth_container {
-  width: 35rem;
+  width: 40rem;
+  padding-block: 2rem;
   min-height: 35rem;
   height: auto;
   background-color: rgb(113, 235, 240);

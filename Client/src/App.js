@@ -10,19 +10,23 @@ import {
   getProducts,
   setFeaturedProducts,
 } from "./redux/Actions/productActions";
+import { checkAuth } from "./redux/Actions/authActions";
 import ProductsPage from "./Pages/ProductsPage/ProductsPage";
 import ProductDetails from "./Pages/ProductDetails/ProductDetails";
 import Cart from "./Pages/Cart/Cart";
 import Contact from "./Pages/Contact/Contact";
 import About from "./Pages/About/About";
+import SignUp from "./Pages/SignUp/SignUp";
+import Login from "./Pages/LogIn/LogIn";
 
-const App = ({ getProducts, setFeaturedProducts }) => {
+const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
   useEffect(() => {
     getProducts().then((res) => {
       const popular = res.products.filter(product => product.popular === true);
       setFeaturedProducts(popular);
     }).catch((err => console.log(err)));
-  },[getProducts, setFeaturedProducts])
+    checkAuth()
+  },[getProducts, setFeaturedProducts, checkAuth])
   return (
     <div className="App">
       <NavBar />
@@ -34,6 +38,8 @@ const App = ({ getProducts, setFeaturedProducts }) => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/login" element={<Login/>} />
         </Routes>
       </div>
       <Footer />
@@ -48,6 +54,6 @@ App.propTypes = {
 
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, { getProducts, setFeaturedProducts })(
+export default connect(mapStateToProps, { getProducts, setFeaturedProducts, checkAuth })(
   App
 );

@@ -7,10 +7,10 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    lastame: {
+    lastName: {
         type: String,
         required: true,
-    }
+    },
     email: { 
         type: String,
         required: true,
@@ -33,6 +33,10 @@ const userSchema = new Schema({
             type: String,
             default: "",
         }
+    },
+    verified: {
+        type: Boolean,
+        default: false
     }
 })
 

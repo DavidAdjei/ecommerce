@@ -26,7 +26,7 @@ function Login({signin}) {
       setLoading(false);
       return;
     } else {
-      signin(credentials).then(() => page ? navigate(`/${page}`) : navigate('/')).catch(err => setError(err));    }
+      signin(credentials).then(() => page ? navigate(`${page}`) : navigate('/')).catch(err => setError(err));    }
   };
 
   const handleChange = (e) => {

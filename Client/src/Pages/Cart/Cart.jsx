@@ -25,11 +25,14 @@ export const Cart = ({ cart, placeOrder, user }) => {
     if (!user) {
       alert("You need to log in first");
       const query = new URLSearchParams({
-        page: 'cart',
+        page: '/cart',
       });
       navigate(`/login?${query.toString()}`);
     } else {
-      placeOrder(user._id, cart)
+      placeOrder(user._id, cart).then((res) => {
+        console.log(res);
+        window.location.href = res?.data?.authorization_url;
+      }).catch(err => console.log(err));
     }
   }
 

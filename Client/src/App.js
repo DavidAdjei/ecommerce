@@ -25,7 +25,7 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
       const popular = res.products.filter(product => product.popular === true);
       setFeaturedProducts(popular);
     }).catch((err => console.log(err)));
-    checkAuth()
+    checkAuth().catch(err => console.log(err));
   },[getProducts, setFeaturedProducts, checkAuth])
   return (
     <div className="App">

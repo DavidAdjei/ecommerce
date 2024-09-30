@@ -1,11 +1,11 @@
 require("dotenv").config();
 const express = require("express");
-const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const authRoutes = require("./Routes/auth");
 const orderRoutes = require("./Routes/order");
 const productRoutes = require("./Routes/products");
-const categoryRoutes = require("./Routes/categories")
+const categoryRoutes = require("./Routes/categories");
 const cors = require('cors');
 const morgan = require("morgan");
 
@@ -18,18 +18,6 @@ mongoose.connect(process.env.DATABASE)
        
 app.use(express.json({ limit: "4mb" }));
 
-app.use(session({
-    secret: 'lullaby',
-    cookie: {
-        httpOnly: true,
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        secure: false
-    },
-    resave: false,
-    saveUninitialized: false
-}));
-
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: ["http://localhost:3000"],
@@ -37,6 +25,7 @@ app.use(cors({
     credentials: true
 }));
 
+app.use(cookieParser());
 
 app.use(morgan("dev"));
 

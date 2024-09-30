@@ -2,6 +2,13 @@ const User = require("../db/user");
 const jwt = require("jsonwebtoken");
 const { hashPassword, comparePassword } = require("../helpers/auth");
 
+const cookieOptions = {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+    maxAge: 1000 * 60 * 60 * 24 * 3
+}
+
 exports.signUp = async (req, res) => {
     try {
         const { firstName, lastName, email, password } = req.body;
@@ -70,11 +77,12 @@ exports.signin = async (req, res) => {
             } else {
                 const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
                     expiresIn: "7d",
-                })
+                });
                 user.password = undefined;
                 user.secret = undefined;
-                req.session.authToken = token;
-                req.session.user = user
+                res.cookie('auth_token', token, cookieOptions);
+
+                console.log(req.session);
                 res.json({
                     user,
                 })
@@ -87,17 +95,42 @@ exports.signin = async (req, res) => {
 }
 
 exports.isAuth = async (req, res) => {
-    console.log(req.session);
+    console.log(req.cookies);
     try {
-        const { authToken } = req.session;
+        const authToken = req.cookies.auth_token;
         if (!authToken) {
             console.log("No token");
             return res.status(403).json({ error: "Not authenticated" });
         }
-        console.log(auth_token);
+        let decoded;
+        try {
+            decoded = jwt.verify(authToken, process.env.JWT_SECRET);
+        } catch (err) {
+            return res.status(409).json({ error: 'Invalid Token' });
+        }
+
+        const user = await User.findById(decoded._id);
+        if (!user) {
+            return res.json(404).json({
+                error: "User not found"
+            })
+        }
+        user.password = undefined;
+        user.secret = undefined;
+        return res.json({ message: "Authenticated", user });
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: err.message });
     }
 };
 
+exports.logout = async (req, res) => {
+    console.log(req.cookies);
+    try {
+        res.clearCookie('auth_token', cookieOptions);
+        return res.json({ message: "Logout successful" });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: `Logout failed ${err.message}` });
+    }
+}

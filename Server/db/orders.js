@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const orderSchema = new Schema({
-    userID: { 
+    userId: { 
         type: Schema.Types.ObjectId, 
         ref: 'User',
         required: true 
@@ -13,9 +13,12 @@ const orderSchema = new Schema({
         default: Date.now 
     },
     orderItems: [{
-        product: {
+        title: {
             type: String,
             required: true
+        },
+        specifications:{
+            type: [mongoose.Schema.Types.Mixed],
         },
         quantity: {
             type: Number,
@@ -24,6 +27,9 @@ const orderSchema = new Schema({
         price: {
             type: Number,
             required: true
+        },
+        image:{
+            type: [String],
         }
     }],
     status: {

@@ -2,9 +2,7 @@ import React from 'react'
 import "./features.css"
 
 export default function UserInput({ placeholder, name, type, value, setValue, error }) {
-    const handleChange = (e) => {
-        setValue(e.target.value)
-    }
+
   return (
     <div className='user_input'>
       <p className='label'>{placeholder}</p>
@@ -12,7 +10,7 @@ export default function UserInput({ placeholder, name, type, value, setValue, er
                   type={type}
                   value={value}
                   name={name}
-                  onChange={handleChange}
+                  onChange={setValue}
               />
     </div>
   )

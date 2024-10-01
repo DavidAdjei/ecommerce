@@ -127,20 +127,24 @@
 }
 
 .home .slick-dots li {
-  height: 10px;
+  height: 5px;
   margin: 0 5px;
 }
 
 .home .slick-dots li button {
   border: none;
   outline: none;
-  width: 10px;
-  height: 10px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: gray;
   transition: background 0.3s;
 }
 
+.home .slick-dots li button::before {
+  font-size: 0;
+}
+
 .home .slick-dots li.slick-active button {
-  background: blue;
+  background: rgb(37, 74, 88);
 }

@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./component.css";
 import Logo from "../assets/images/Logo.jpeg";
 import { IoPersonOutline } from "react-icons/io5";
 import { IoCartOutline } from "react-icons/io5";
 import { IoIosSearch } from "react-icons/io";
+import Button from '@mui/material/Button'
 
-function NavBar() {
+function NavBar({isAuth}) {
   const [keyword, setKeyword] = useState("");
-  const [query, setQuery] = useState(new URLSearchParams())
+  const [query, setQuery] = useState(new URLSearchParams());
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
     setKeyword(e.target.value);
@@ -18,6 +21,13 @@ function NavBar() {
         searchKeyword: keyword,
     });
     setQuery(query);
+  }
+
+  const handleLogin = () => {
+    const query = new URLSearchParams({
+      page: location.pathname
+    });
+    navigate(`/login?${query.toString()}`)
   }
 
   return (
@@ -56,9 +66,17 @@ function NavBar() {
           <Link to={`/shop?${query.toString()}`}>
             <IoIosSearch size={30} className="search_button" />
           </Link>
-          <Link to="/profile">
-            <IoPersonOutline size={30} />
-          </Link>
+          {
+            !isAuth ? (
+              <Button variant="outlined" color="secondary" onClick={handleLogin}>
+                Login
+              </Button>
+            ) : (
+                <Link to="/profile">
+                  <IoPersonOutline size={30} />
+                </Link>
+            )
+          }
           <Link to="/cart">
             <IoCartOutline size={30} />
           </Link>
@@ -69,9 +87,11 @@ function NavBar() {
 }
 
 NavBar.propTypes = {
+  isAuth: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = (state) => ({
+  isAuth: state.auth.isAuth
 })
 
 

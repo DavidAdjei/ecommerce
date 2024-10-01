@@ -1,3 +1,4 @@
+import axios from "axios";
 import { ADD_TO_CART, DECREMENT, INCREMENT, REMOVE_FROM_CART } from "../constants";
 
 export const addToCart = (product) => ({
@@ -19,3 +20,20 @@ export const removeFromCart = (itemId) => ({
     type: REMOVE_FROM_CART,
     payload: itemId
 })
+
+export const placeOrder = (userId, order) => {
+    return async (dispatch) => {
+        try {
+           const response = await axios.post(`${process.env.REACT_APP_SERVER}/order/${userId}`, {order});
+            if (!response.data.error) {
+                return Promise.resolve(response.data)
+            } else {
+                return Promise.reject(response.data.error)
+            } 
+        } catch (err) {
+            console.log(err);
+            return Promise.reject(err.response?.data.error || err.message);
+        }
+        
+    }
+}

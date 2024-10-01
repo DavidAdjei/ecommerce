@@ -3,18 +3,26 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    name: { 
-        type: String 
+    firstName: { 
+        type: String,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        required: true,
     },
     email: { 
-        type: String 
+        type: String,
+        required: true,
+        unique: true,
     },
     password: { 
-        type: String 
+        type: String,
+        required: true
     },
     role: {
         type: String,
-        default: "Subscriber",
+        default: "Buyer",
     },
     image: {
         public_id: {
@@ -25,6 +33,10 @@ const userSchema = new Schema({
             type: String,
             default: "",
         }
+    },
+    verified: {
+        type: Boolean,
+        default: false
     }
 })
 

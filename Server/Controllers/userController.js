@@ -95,11 +95,9 @@ exports.signin = async (req, res) => {
 }
 
 exports.isAuth = async (req, res) => {
-    console.log(req.cookies);
     try {
         const authToken = req.cookies.auth_token;
         if (!authToken) {
-            console.log("No token");
             return res.status(403).json({ error: "Not authenticated" });
         }
         let decoded;

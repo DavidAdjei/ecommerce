@@ -1,4 +1,4 @@
-import { SET_CATEGORIES, SET_FEATURED_PRODUCT, SET_PRODUCTS, SET_SELECTED_PRODUCT, SET_FILTERED_PRODUCTS } from "../constants";
+import { SET_CATEGORIES, SET_FEATURED_PRODUCT, SET_PRODUCTS, SET_SELECTED_PRODUCT, SET_FILTERED_PRODUCTS, SET_FEEDBACK } from "../constants";
 import axios from "axios"
 
 export const setProducts = (products) => ({
@@ -24,6 +24,11 @@ export const setSelectedProduct = (product) => ({
 export const setCategories = (categories) => ({
     type: SET_CATEGORIES,
     payload: categories
+})
+
+export const setFeedback = (data) => ({
+    type: SET_FEEDBACK,
+    payload: data
 })
 
 export const getProducts = () => {

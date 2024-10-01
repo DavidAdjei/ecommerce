@@ -8,11 +8,13 @@ import "./products.css";
 import Filter from '../../component/Filter';
 import Button from '@mui/material/Button';
 import { getCategories, setFilteredProducts } from '../../redux/Actions/productActions';
+import Loader from '../../features/Loader';
 
 const ProductsPage = ({ products, getCategories, setFilteredProducts, filteredProducts }) => {
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(1);
   const itemsPerPage = 9;
+  const [loading, setLoading] = useState(false);
   
   const [searchParams] = useSearchParams();
   const categoryFromQuery = searchParams.get('category');
@@ -31,10 +33,12 @@ const ProductsPage = ({ products, getCategories, setFilteredProducts, filteredPr
     setPage(value);
   };
 
-   useEffect(() => {
+  useEffect(() => {
+     setLoading(true)
     getCategories().catch(err => console.log(err));
     if (!categoryFromQuery ||  !filtersFromQuery) {
       setFilteredProducts(products);
+      setLoading(false);
       return;
     }
     const filter = () => {
@@ -69,19 +73,22 @@ const ProductsPage = ({ products, getCategories, setFilteredProducts, filteredPr
         });
         filtered = newFiltered;
       }
-      setFilteredProducts(filtered)
+      setFilteredProducts(filtered);
+      setLoading(false);
     };
   filter();
    }, [products, categoryFromQuery, filtersFromQuery, getCategories, setFilteredProducts]);
   
   useEffect(() => {
+    setLoading(true);
     if (searchKeyword) {
       const newProducts = products.filter((product) =>
         product.title.toLowerCase().includes(searchKeyword.toLowerCase())
       );
-      console.log(newProducts)
-      setFilteredProducts(newProducts)
+      setFilteredProducts(newProducts);
+      setLoading(false);
     }
+    setLoading(false);
   }, [products, searchKeyword, setFilteredProducts]);
 
   return (
@@ -103,6 +110,9 @@ const ProductsPage = ({ products, getCategories, setFilteredProducts, filteredPr
           <p>No products available</p>
         )}
       </div>
+      {
+        loading && <Loader/>
+      }
       {totalPages > 1 && (
         <Pagination
           count={totalPages}

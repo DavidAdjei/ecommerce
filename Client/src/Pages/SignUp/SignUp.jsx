@@ -6,9 +6,10 @@ import Logo from '../../assets/images/Logo.jpeg'
 import "../LogIn/auth.css"
 import { signUp } from '../../redux/Actions/authActions';
 import { useNavigate } from 'react-router-dom';
+import { setFeedback } from '../../redux/Actions/productActions';
 
 
-function SignUp({signUp}) {
+function SignUp({signUp, setFeedback}) {
     const [credentials, setCredentials] = useState({
         firstName: "",
         lastName: "",
@@ -17,7 +18,6 @@ function SignUp({signUp}) {
         confirmPassword: ""
     });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -26,11 +26,11 @@ function SignUp({signUp}) {
         setLoading(true);
 
         if (!credentials.firstName || !credentials.lastName || !credentials.email || !credentials.password || !credentials.confirmPassword) {
-            setError('Please fill in all fields');
+            setFeedback({error: 'Please fill in all fields'});
             setLoading(false);
             return;
         } else {
-            signUp(credentials).then(() => navigate('/login')).catch(err => setError(err));
+            signUp(credentials).then(() => navigate('/login')).catch(err => { setFeedback({ error: err });  setLoading(false)});
         }
     };
 
@@ -55,7 +55,6 @@ function SignUp({signUp}) {
                         name="firstName"
                         placeholder="Enter Your First Name"
                         setValue={handleChange}
-                        error={error}
                     />
                     <UserInput
                         type="text"
@@ -63,7 +62,6 @@ function SignUp({signUp}) {
                         name="lastName"
                         placeholder="Enter Your Last Name"
                         setValue={handleChange}
-                        error={error}
                     />
                     <UserInput
                         type="email"
@@ -71,7 +69,6 @@ function SignUp({signUp}) {
                         name="email"
                         placeholder="Enter Your Email"
                         setValue={handleChange}
-                        error={error}
                     />
                     <UserInput
                         type="password"
@@ -79,7 +76,6 @@ function SignUp({signUp}) {
                         name="password"
                         placeholder="Enter Your Password"
                         setValue={handleChange}
-                        error={error}
                     />
                     <UserInput
                         type="password"
@@ -87,10 +83,8 @@ function SignUp({signUp}) {
                         name="confirmPassword"
                         placeholder="Confirm Your Password"
                         setValue={handleChange}
-                        error={error}
                     />
                     <input type="submit" disabled={loading} className='auth_submit' />
-                    {error && <p className='error'>{error}</p>}
                 </form>
             </div>
         </div>
@@ -99,7 +93,8 @@ function SignUp({signUp}) {
 }
 
 SignUp.propTypes = {
-  signUp: PropTypes.func
+  signUp: PropTypes.func,
+  setFeedback: PropTypes.func
 }
 
 const mapStateToProps = (state) => ({
@@ -107,4 +102,4 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps, {signUp})(SignUp)
+export default connect(mapStateToProps, {signUp, setFeedback})(SignUp)

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -9,6 +9,7 @@ import Footer from "./component/footer";
 import {
   getProducts,
   setFeaturedProducts,
+  setFeedback,
 } from "./redux/Actions/productActions";
 import { checkAuth } from "./redux/Actions/authActions";
 import ProductsPage from "./Pages/ProductsPage/ProductsPage";
@@ -18,18 +19,24 @@ import Contact from "./Pages/Contact/Contact";
 import About from "./Pages/About/About";
 import SignUp from "./Pages/SignUp/SignUp";
 import Login from "./Pages/LogIn/LogIn";
+import Loader from "./features/Loader";
+import Feedback from "./features/Feedback";
 
-const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
+const App = ({ getProducts, setFeaturedProducts, checkAuth, setFeedback, feedback }) => {
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true)
     getProducts().then((res) => {
       const popular = res.products.filter(product => product.popular === true);
       setFeaturedProducts(popular);
-    }).catch((err => console.log(err)));
+      setLoading(false)
+    }).catch((err => setFeedback({error: err})));
     checkAuth().catch(err => console.log(err));
-  },[getProducts, setFeaturedProducts, checkAuth])
+  },[getProducts, setFeaturedProducts, checkAuth, setFeedback])
   return (
     <div className="App">
       <NavBar />
+      {feedback && <Feedback data={feedback} onClose={() => setFeedback(null)}/>}
       <div className="main">
         <Routes>
           <Route path="/" exact element={<Homepage />} />
@@ -43,6 +50,7 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
         </Routes>
       </div>
       <Footer />
+      {loading && <Loader />}
     </div>
   );
 };
@@ -50,10 +58,14 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
 App.propTypes = {
   getProducts: PropTypes.func,
   setFeaturedProducts: PropTypes.func,
+  setFeedback: PropTypes.func,
+  feedback: PropTypes.object
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  feedback: state.product.feedback
+});
 
-export default connect(mapStateToProps, { getProducts, setFeaturedProducts, checkAuth })(
+export default connect(mapStateToProps, { getProducts, setFeaturedProducts, checkAuth, setFeedback })(
   App
 );

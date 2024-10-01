@@ -10,4 +10,4 @@ export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 export const SET_CATEGORIES = "SET_CATEGORIES";
 export const SET_USER = "SET_USER";
 export const SET_AUTH = "SET_AUTH";
-export const SET_ERROR = "SET_ERROR";
+export const SET_FEEDBACK = "SET_FEEDBACK";

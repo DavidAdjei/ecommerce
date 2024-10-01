@@ -1,14 +1,16 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import CartItem from "../../component/CartItem";
 import "./cart.css";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { placeOrder } from "../../redux/Actions/cartActions";
+import { setFeedback } from "../../redux/Actions/productActions";
 
-export const Cart = ({ cart, placeOrder, user }) => {
+export const Cart = ({ cart, placeOrder, user, setFeedback }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const calculateTot = () => {
     let total = 0;
     Object.values(cart).forEach((item) => {
@@ -22,17 +24,19 @@ export const Cart = ({ cart, placeOrder, user }) => {
   // }
 
   const submitOrder = () => {
+    setLoading(true);
     if (!user) {
-      alert("You need to log in first");
+      setFeedback({error: "You need to log in first"});
       const query = new URLSearchParams({
         page: '/cart',
       });
+      setLoading(false);
       navigate(`/login?${query.toString()}`);
     } else {
       placeOrder(user._id, cart).then((res) => {
-        console.log(res);
+        setLoading(false);
         window.location.href = res?.data?.authorization_url;
-      }).catch(err => console.log(err));
+      }).catch(err => setFeedback({error: err}));
     }
   }
 
@@ -99,4 +103,4 @@ const mapStateToProps = (state) => ({
   user: state.auth.user
 });
 
-export default connect(mapStateToProps, {placeOrder})(Cart);
+export default connect(mapStateToProps, {placeOrder, setFeedback})(Cart);

@@ -1,11 +1,12 @@
-const { SET_PRODUCTS, SET_FEATURED_PRODUCT, SET_SELECTED_PRODUCT, SET_CATEGORIES, SET_FILTERED_PRODUCTS} = require("../constants");
+const { SET_PRODUCTS, SET_FEATURED_PRODUCT, SET_SELECTED_PRODUCT, SET_CATEGORIES, SET_FILTERED_PRODUCTS, SET_FEEDBACK} = require("../constants");
 
 const initialState = {
     products: [],
     featuredProducts: [],
     selectedProduct: null,
     categories: [],
-    filteredProducts: []
+    filteredProducts: [],
+    feedback: null
 }
 
 
@@ -35,6 +36,11 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 categories: action.payload
+            }
+        case SET_FEEDBACK:
+            return {
+                ...state,
+                feedback: action.payload
             }
         default:
             return state;

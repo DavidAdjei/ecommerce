@@ -3,16 +3,17 @@ import React, { useEffect } from "react";
 import "./ProductDetails.css";
 import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
-import { getSelectedProduct } from "../../redux/Actions/productActions";
+import { getSelectedProduct, setFeedback } from "../../redux/Actions/productActions";
 import Button from "@mui/material/Button";
 import { Rating } from "@mui/material";
 import { addToCart } from "../../redux/Actions/cartActions";
+import Loader from "../../features/Loader";
 
 const ProductDetails = ({
   getSelectedProduct,
   selectedProduct,
-  cart,
   addToCart,
+  setFeedback
 }) => {
   const { id } = useParams();
 
@@ -21,10 +22,10 @@ const ProductDetails = ({
   }, []);
 
   const fetchProduct = () => {
-    getSelectedProduct(id).catch((err) => console.log(err));
+    getSelectedProduct(id).catch((err) => setFeedback({error: err}));
   };
 
-  if (!selectedProduct) return <div>Loading...</div>;
+  if (!selectedProduct) return <Loader/>;
 
   return (
     <div className="product-details">
@@ -44,7 +45,7 @@ const ProductDetails = ({
         <Button
           onClick={() => {
             addToCart(selectedProduct);
-            console.log(cart);
+            setFeedback({ message: "Item Added" });
           }}
           variant="contained"
           color="secondary"
@@ -88,10 +89,9 @@ ProductDetails.propTypes = {
 const mapStateToProps = (state) => {
   return {
     selectedProduct: state.product.selectedProduct,
-    cart: state.cart.cart,
   };
 };
 
-export default connect(mapStateToProps, { getSelectedProduct, addToCart })(
+export default connect(mapStateToProps, { getSelectedProduct, addToCart, setFeedback })(
   ProductDetails
 );

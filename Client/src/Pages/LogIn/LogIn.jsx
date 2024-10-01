@@ -5,14 +5,15 @@ import { signin } from "../../redux/Actions/authActions";
 import UserInput from "../../features/UserInput";
 import Logo from "../../assets/images/Logo.jpeg";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import Loader from "../../features/Loader";
+import { setFeedback } from "../../redux/Actions/productActions";
 
-function Login({signin}) {
+function Login({signin, setFeedback}) {
   const [credentials, setCredentials] = useState({
     email: "",
     password: ""
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page');
@@ -22,11 +23,18 @@ function Login({signin}) {
     setLoading(true);
 
     if (!credentials.email || !credentials.password) {
-      setError("Please fill in all fields");
+      setFeedback({error: "Please fill in all fields"});
       setLoading(false);
       return;
     } else {
-      signin(credentials).then(() => page ? navigate(`${page}`) : navigate('/')).catch(err => setError(err));    }
+      signin(credentials).then(() => {
+        page ? navigate(`${page}`) : navigate('/');
+        setLoading(false);
+      }).catch(err => {
+        setFeedback({ error: err });
+        setLoading(false);
+      });
+    }
   };
 
   const handleChange = (e) => {
@@ -58,10 +66,10 @@ function Login({signin}) {
             placeholder="Enter Your Password"
             setValue={handleChange}
           />
-          <input type="submit" disabled={loading} className="auth_submit" />
-          {error && <p className="error">{error}</p>}
+          <input type="submit" className="auth_submit"/>
         </form>
       </div>
+      {loading && <Loader/>}
     </div>
   );
 }
@@ -74,4 +82,4 @@ Login.propTypes = {
 const mapStateToProps = (state) => ({})
 
 
-export default connect(mapStateToProps, {signin})(Login)
+export default connect(mapStateToProps, {signin, setFeedback})(Login)

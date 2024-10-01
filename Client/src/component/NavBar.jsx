@@ -73,12 +73,17 @@ function NavBar({ isAuth }) {
             <Button variant="outlined" color="secondary" onClick={handleLogin}>
               Login
             </Button>
-          ) : null}
-
-          {isAuth && showCard && <Card />}
-          <Link to="/profile">
-            <IoPersonOutline size={30} onClick={() => setShowCard(!showCard)} />
-          </Link>
+          ) : (
+            <>
+              {showCard && <Card />}
+              <Link>
+                <IoPersonOutline
+                  size={30}
+                  onClick={() => setShowCard(!showCard)}
+                />
+              </Link>
+            </>
+          )}
 
           <Link to="/cart">
             <IoCartOutline size={30} />

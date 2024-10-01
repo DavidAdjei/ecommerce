@@ -154,7 +154,7 @@
 .banner img {
   width: 100%;
   height: 40rem;
-  background-size: contain; /* Or use 'cover' to make the image cover the whole container */
+  background-size: cover; /* Or use 'cover' to make the image cover the whole container */
   background-position: center;
   background-repeat: no-repeat;
 }

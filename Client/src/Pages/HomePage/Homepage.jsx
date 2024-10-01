@@ -4,8 +4,9 @@ import Slider from "react-slick";
 import { connect } from "react-redux";
 import "./homepage.css";
 
-const BannerImage = require("../../assets/images/avocado_cut_in_half-wallpaper-3840x2160.jpg");
-const BannerImage2 = require("../../assets/images/amazon-wallpaper-2560x1440.jpg");
+const BannerImage = require("../../assets/images/iPhone-15-release-date-expectations-your-guide-to-potential-specs-features-and-pricing.jpg");
+const BannerImage2 = require("../../assets/images/PlayStation-5.jpg");
+const BannerImage3 = require("../../assets/images/PlayStation-5.jpg");
 
 const Homepage = ({ featuredProducts }) => {
   const settings = {
@@ -52,6 +53,11 @@ const Homepage = ({ featuredProducts }) => {
         <div className="banner">
           <button>Hello</button>
           <img src={BannerImage2} alt="beauty" />
+        </div>
+
+        <div className="banner">
+          <button>Hello</button>
+          <img src={BannerImage3} alt="beauty" />
         </div>
       </Slider>
     </div>

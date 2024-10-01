@@ -127,7 +127,12 @@
 .right a:hover {
   color: #e74c3c;
 }
-
+.profile {
+  cursor: pointer;
+}
+.profile:hover {
+  color: #e74c3c;
+}
 .search_input {
   outline: none;
   width: 30rem;

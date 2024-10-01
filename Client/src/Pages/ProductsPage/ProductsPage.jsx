@@ -136,7 +136,6 @@ const ProductsPage = ({
       )}
 
       {visible && <Filter setVisible={setVisible} />}
-      <Footer />
     </div>
   );
 };

@@ -19,7 +19,6 @@ const Homepage = ({ featuredProducts }) => {
       <Banner />
       <Banner />
       <Banner />
-      <Footer />
     </div>
   );
 };

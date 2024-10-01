@@ -52,7 +52,7 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
           <Route path="/orders" element={<Orders />} />
         </Routes>
       </div>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };

@@ -21,6 +21,7 @@ import Login from "./Pages/LogIn/LogIn";
 import Profile from "./Pages/Profile/Profile";
 import Favourites from "./Pages/Favourites/Favourites";
 import Orders from "./Pages/Orders/Orders";
+import Address from "./Pages/Address/Address";
 
 const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
   useEffect(() => {
@@ -50,6 +51,7 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/edit-address" element={<Address />} />
         </Routes>
       </div>
       <Footer />

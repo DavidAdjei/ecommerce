@@ -18,15 +18,22 @@ import Contact from "./Pages/Contact/Contact";
 import About from "./Pages/About/About";
 import SignUp from "./Pages/SignUp/SignUp";
 import Login from "./Pages/LogIn/LogIn";
+import Profile from "./Pages/Profile/Profile";
+import Favourites from "./Pages/Favourites/Favourites";
+import Orders from "./Pages/Orders/Orders";
 
 const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
   useEffect(() => {
-    getProducts().then((res) => {
-      const popular = res.products.filter(product => product.popular === true);
-      setFeaturedProducts(popular);
-    }).catch((err => console.log(err)));
-    checkAuth().catch(err => console.log(err));
-  },[getProducts, setFeaturedProducts, checkAuth])
+    getProducts()
+      .then((res) => {
+        const popular = res.products.filter(
+          (product) => product.popular === true
+        );
+        setFeaturedProducts(popular);
+      })
+      .catch((err) => console.log(err));
+    checkAuth().catch((err) => console.log(err));
+  }, [getProducts, setFeaturedProducts, checkAuth]);
   return (
     <div className="App">
       <NavBar />
@@ -39,7 +46,10 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/signUp" element={<SignUp />} />
-          <Route path="/login" element={<Login/>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/favourites" element={<Favourites />} />
+          <Route path="/orders" element={<Orders />} />
         </Routes>
       </div>
       <Footer />
@@ -54,6 +64,8 @@ App.propTypes = {
 
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, { getProducts, setFeaturedProducts, checkAuth })(
-  App
-);
+export default connect(mapStateToProps, {
+  getProducts,
+  setFeaturedProducts,
+  checkAuth,
+})(App);

@@ -1,65 +1,25 @@
 import PropTypes from "prop-types";
 import React from "react";
-import Slider from "react-slick";
+
 import { connect } from "react-redux";
 import "./homepage.css";
 
-const BannerImage = require("../../assets/images/iPhone-15-release-date-expectations-your-guide-to-potential-specs-features-and-pricing.jpg");
-const BannerImage2 = require("../../assets/images/PlayStation-5.jpg");
-const BannerImage3 = require("../../assets/images/PlayStation-5.jpg");
+import Banner from "../../component/Banner";
+import Footer from "../../component/footer";
 
 const Homepage = ({ featuredProducts }) => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    fade: true,
-    cssEase: "linear",
-    autoplay: true,
-    autoplaySpeed: 5000,
-    pauseOnHover: false,
-  };
-
   return (
     <div className="home">
-      <Slider {...settings}>
-        {/* {featuredProducts?.length > 0 ? (
-          featuredProducts?.map((product) => (
-            <div key={product._id} className="slide">
-              <img
-                src={product.imgs[0]}
-                alt={product.title}
-                className="slide-image"
-              />
-              <div className="slide-content">
-                <h2>{product.title}</h2>
-                <p>Price: GHS{product.price}</p>
-                <p>Rating: {product.rating} ⭐</p>
-                <a href="/all-products" className="view-details-button">
-                  View More
-                </a>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No featured products available.</p>
-        )} */}
+      <Banner />
 
-        <div className="banner">
-          <button>Hello</button>
-          <img src={BannerImage} alt="beauty" />
-        </div>
+      <div className="new-arrivals">
+        <h1>New Arrivals</h1>
+      </div>
 
-        <div className="banner">
-          <button>Hello</button>
-          <img src={BannerImage2} alt="beauty" />
-        </div>
-
-        <div className="banner">
-          <button>Hello</button>
-          <img src={BannerImage3} alt="beauty" />
-        </div>
-      </Slider>
+      <Banner />
+      <Banner />
+      <Banner />
+      <Footer />
     </div>
   );
 };

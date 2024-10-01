@@ -76,12 +76,12 @@ function NavBar({ isAuth }) {
           ) : (
             <>
               {showCard && <Card />}
-              <Link>
+              <div className="profile">
                 <IoPersonOutline
                   size={30}
                   onClick={() => setShowCard(!showCard)}
                 />
-              </Link>
+              </div>
             </>
           )}
 

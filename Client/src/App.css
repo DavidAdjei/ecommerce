@@ -8,14 +8,13 @@
 
 .App {
   width: 100%;
-  min-height: 100vh;
-  height: auto;
+  height: 100vh;
 }
 
 .main {
   display: flex;
   width: 100%;
-  min-height: calc(100vh - 5rem);
+  height: calc(100vh - 5rem);
   height: auto;
   overflow-x: hidden;
 }

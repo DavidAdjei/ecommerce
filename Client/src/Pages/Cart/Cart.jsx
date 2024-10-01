@@ -25,16 +25,18 @@ export const Cart = ({ cart, placeOrder, user }) => {
     if (!user) {
       alert("You need to log in first");
       const query = new URLSearchParams({
-        page: '/cart',
+        page: "/cart",
       });
       navigate(`/login?${query.toString()}`);
     } else {
-      placeOrder(user._id, cart).then((res) => {
-        console.log(res);
-        window.location.href = res?.data?.authorization_url;
-      }).catch(err => console.log(err));
+      placeOrder(user._id, cart)
+        .then((res) => {
+          console.log(res);
+          window.location.href = res?.data?.authorization_url;
+        })
+        .catch((err) => console.log(err));
     }
-  }
+  };
 
   return (
     <div className="cart-container">
@@ -81,13 +83,14 @@ export const Cart = ({ cart, placeOrder, user }) => {
               Subtotal: <strong>GHS </strong>
               {calculateTot().toFixed(2)}
             </div>
-            <button className="checkout" onClick={submitOrder}>Proceed to Checkout</button>
+            <button className="checkout" onClick={submitOrder}>
+              Proceed to Checkout
+            </button>
           </div>
         </div>
-      )
-      };
+      )}
     </div>
-  )
+  );
 };
 
 Cart.propTypes = {
@@ -96,7 +99,7 @@ Cart.propTypes = {
 
 const mapStateToProps = (state) => ({
   cart: state.cart.cart,
-  user: state.auth.user
+  user: state.auth.user,
 });
 
-export default connect(mapStateToProps, {placeOrder})(Cart);
+export default connect(mapStateToProps, { placeOrder })(Cart);

@@ -8,7 +8,7 @@
 }
 
 .product_list {
-  width: 100%;
+  width: 60%;
   display: flex;
   gap: 1.4rem;
   padding: 1rem;
@@ -21,4 +21,8 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+.filter-btn {
+  position: relative;
+  margin: 100px;
 }

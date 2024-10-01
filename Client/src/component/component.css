@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
-  z-index: 100;
+  z-index: 10;
 }
 
 .product-card {
@@ -25,8 +25,6 @@
   padding: 30px;
   cursor: pointer;
   overflow: hidden;
-  z-index: -999;
-  margin-top: 70px;
 }
 
 .product-card:hover {
@@ -67,6 +65,7 @@
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
+  margin: 10px;
 }
 .nav {
   width: 100%;
@@ -153,13 +152,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
+  margin-top: 8.5vh;
 }
 
 .banner img {
   width: 100%;
-  height: calc(100vh - 5rem);
-  background-size: contain; /* Or use 'cover' to make the image cover the whole container */
+  height: 50vh;
+  background-size: cover; /* Or use 'cover' to make the image cover the whole container */
   background-position: center;
   background-repeat: no-repeat;
 }

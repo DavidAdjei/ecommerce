@@ -47,12 +47,12 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth }) => {
           <Route path="/about" element={<About />} />
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/shop" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/orders" element={<Orders />} />
         </Routes>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

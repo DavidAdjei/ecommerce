@@ -6,6 +6,7 @@ import UserInput from "../../features/UserInput";
 import Logo from "../../assets/images/Logo.jpeg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Loader from "../../features/Loader";
+import "./auth.css"
 import { setFeedback } from "../../redux/Actions/productActions";
 
 function Login({signin, setFeedback}) {

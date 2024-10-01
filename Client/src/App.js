@@ -1,26 +1,28 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import { connect } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Homepage from "./Pages/HomePage/Homepage";
 import NavBar from "./component/NavBar";
 import Footer from "./component/footer";
+import Loader from "./features/Loader";
+import Feedback from "./features/Feedback";
 import {
   getProducts,
   setFeaturedProducts,
   setFeedback,
 } from "./redux/Actions/productActions";
 import { checkAuth } from "./redux/Actions/authActions";
-import ProductsPage from "./Pages/ProductsPage/ProductsPage";
-import ProductDetails from "./Pages/ProductDetails/ProductDetails";
-import Cart from "./Pages/Cart/Cart";
-import Contact from "./Pages/Contact/Contact";
-import About from "./Pages/About/About";
-import SignUp from "./Pages/SignUp/SignUp";
-import Login from "./Pages/LogIn/LogIn";
-import Loader from "./features/Loader";
-import Feedback from "./features/Feedback";
+
+const Homepage = lazy(() => import("./Pages/HomePage/Homepage"));
+const ProductsPage = lazy(() => import("./Pages/ProductsPage/ProductsPage"));
+const ProductDetails = lazy(() => import("./Pages/ProductDetails/ProductDetails"));
+const Cart = lazy(() => import("./Pages/Cart/Cart"));
+const Contact = lazy(() => import("./Pages/Contact/Contact"));
+const About = lazy(() => import("./Pages/About/About"));
+const SignUp = lazy(() => import("./Pages/SignUp/SignUp"));
+const Login = lazy(() => import("./Pages/LogIn/LogIn"));
+
 
 const App = ({ getProducts, setFeaturedProducts, checkAuth, setFeedback, feedback }) => {
   const [loading, setLoading] = useState(false);
@@ -38,16 +40,18 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth, setFeedback, feedbac
       <NavBar />
       {feedback && <Feedback data={feedback} onClose={() => setFeedback(null)}/>}
       <div className="main">
-        <Routes>
-          <Route path="/" exact element={<Homepage />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/shop" element={<ProductsPage />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route path="/login" element={<Login/>} />
-        </Routes>
+        <Suspense fallback={<Loader/>}>
+          <Routes>
+            <Route path="/" exact element={<Homepage />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/shop" element={<ProductsPage />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/signUp" element={<SignUp />} />
+            <Route path="/login" element={<Login/>} />
+          </Routes>
+        </Suspense> 
       </div>
       <Footer />
       {loading && <Loader />}

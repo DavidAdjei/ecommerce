@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SET_AUTH, SET_USER } from "../constants";
+import { SET_AUTH, SET_ORDERS, SET_USER } from "../constants";
 
 axios.defaults.withCredentials = true;
 
@@ -12,6 +12,11 @@ export const setAuth = (bool) => ({
     type: SET_AUTH,
     payload: bool
 });
+
+export const setOrders = (orders) => ({
+    type: SET_ORDERS,
+    payload: orders
+})
 
 export const signUp = (credentials) => {
     return async (dispatch) => {
@@ -68,13 +73,29 @@ export const checkAuth = () => {
 export const logout = () => {
     return async (dispatch) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_SERVER}/auth/logout`);
+            const response = await axios.post(`${process.env.REACT_APP_SERVER}/auth/logout`);
             if (!response.data.error) {
                 dispatch(setUser(null));
                 dispatch(setAuth(false));
                 return Promise.resolve(response?.data)
             } else {
                 return Promise.reject(response?.data?.error)
+            } 
+        } catch (err) {
+            return Promise.reject(err.response?.data.error || err.message);
+        }
+    }
+}
+
+export const getOrders = (userId) => {
+    return async (dispatch) => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_SERVER}/order/${userId}`);
+            if (!response.data.error) {
+                dispatch(setOrders(response.data.orders));
+                return Promise.resolve(response.data)
+            } else {
+                return Promise.reject(response.data.error)
             } 
         } catch (err) {
             return Promise.reject(err.response?.data.error || err.message);

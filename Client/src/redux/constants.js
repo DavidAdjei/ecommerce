@@ -11,3 +11,4 @@ export const SET_CATEGORIES = "SET_CATEGORIES";
 export const SET_USER = "SET_USER";
 export const SET_AUTH = "SET_AUTH";
 export const SET_FEEDBACK = "SET_FEEDBACK";
+export const SET_ORDERS = "SET_ORDERS";

@@ -80,9 +80,8 @@ exports.signin = async (req, res) => {
                 });
                 user.password = undefined;
                 user.secret = undefined;
+                user.paystackSecret = undefined;
                 res.cookie('auth_token', token, cookieOptions);
-
-                console.log(req.session);
                 res.json({
                     user,
                 })
@@ -115,6 +114,7 @@ exports.isAuth = async (req, res) => {
         }
         user.password = undefined;
         user.secret = undefined;
+        user.paystackSecret = undefined;
         return res.json({ message: "Authenticated", user });
     } catch (err) {
         console.log(err);

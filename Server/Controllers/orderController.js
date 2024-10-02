@@ -45,9 +45,9 @@ exports.postOrder = async (req, res) => {
         const params = JSON.stringify({
             "email": user.email,
             "amount": savedOrder.totalPrice * 100,
-            "callback_url": 'http://localhost:3000/profile?option=Orders',
+            "callback_url": 'http://localhost:3000/',
+            "reference": savedOrder._id
         })
-
         const options = {
             hostname: 'api.paystack.co',
             port: 443,
@@ -72,41 +72,93 @@ exports.postOrder = async (req, res) => {
                 return res.status(200).json(d);
             })
         }).on('error', error => {
-            console.error(error)
+            console.error(error);
+            return res.status(500).json({error: "Network error"});
         })
 
-        request.write(params)
-        request.end()
+        request.write(params);
+        request.end();
     } catch (err) {
         console.log(err);
         return res.status(500).json({error: err.message});
     }
 }
 
-exports.payOrder = async (req, res) => {
-    const https = require('https')
+exports.verifyOrderPayment = async (req, res) => { 
+    const paystackSecretKey = process.env.PAYSTACK_SECRET;
+    const ref = req.query.reference;
+    console.log("Ref: ", ref)
 
     const options = {
         hostname: 'api.paystack.co',
-        port: 443,
-        path: '/transaction/verify/:reference',
+        path: `/transaction/verify/${ref}`,
         method: 'GET',
         headers: {
-            Authorization: 'Bearer SECRET_KEY'
+            Authorization: `Bearer ${paystackSecretKey}`
         }
-    }
+    };
 
-    https.request(options, response => {
-    let data = ''
+    const paystackRequest = https.request(options, paystackResponse => {
+        let data = '';
 
-    response.on('data', (chunk) => {
-        data += chunk
+        paystackResponse.on('data', chunk => {
+            data += chunk;
+        });
+
+        paystackResponse.on('end', async () => {
+            const transactionData = JSON.parse(data);
+            console.log(transactionData);
+            if (transactionData.data.status === 'success') {
+                const { customer, authorization, reference } = transactionData.data;
+                console.log("Customer: ", customer)
+                console.log("Auth: ", authorization)
+                console.log("Ref: ", reference)
+                try {
+                    const existingOrder = await Order.findOne({ _id: reference });
+                    if (!existingOrder) {
+                        console.log("Error");
+                        return res.status(500).json({ error: 'Order not found' });
+                    }
+
+                    const user = await User.findOne({ email: customer.email });
+                    if (!user) {
+                        return res.status(404).json({ error: 'User not found' });
+                    }
+
+                    user.paystackSecret = authorization.authorization_code;
+                    existingOrder.payment = "Paid";
+                    await user.save();
+                    await existingOrder.save();
+                    
+                    res.status(200).json({ message: 'Payment received' });
+                } catch (error) {
+                    console.error('Error updating order', error);
+                    res.status(500).json({ error: 'An error occurred while updating order' });
+                }
+            }else {
+                res.status(400).json({ error: 'Transaction verification failed or payment was not successful' });
+            }
+        });
     });
 
-    response.on('end', () => {
-        console.log(JSON.parse(data))
-    })
-    }).on('error', error => {
-    console.error(error)
-    })
+    paystackRequest.on('error', error => {
+        console.error('Paystack request error:', error);
+        res.status(500).json({ error: 'An error occurred while verifying transaction' });
+    });
+
+    paystackRequest.end();
+};
+
+exports.getAllOrders = async (req, res) => { 
+    const { userId } = req.params;
+    try {
+        const orders = await Order.find({ userId });
+        if (!orders) {
+            return res.json({message: "No orders made", orders: []})
+        }
+        return res.json({ orders });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: err.message });
+    }
 }

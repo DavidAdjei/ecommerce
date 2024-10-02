@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import './Profile.css'
 import { Box, List, ListItem, ListItemText, Drawer, AppBar, Typography } from '@mui/material';
 import ProfileContent from '../../component/UserDashboard/ProfileContent';
@@ -6,6 +8,7 @@ import OrdersContent from '../../component/UserDashboard/OrdersContent';
 import WishlistContent from '../../component/UserDashboard/WishlistContent';
 import SettingsContent from '../../component/UserDashboard/SettingsContent';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { getOrders } from '../../redux/Actions/authActions';
 
 const menuItems = [
   { id: 1, label: 'Profile' },
@@ -14,10 +17,16 @@ const menuItems = [
   { id: 4, label: 'Settings' },
 ];
 
-const UserDashboard = () => {
+const UserDashboard = ({getOrders, user}) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const option = searchParams.get("option") || "Profile";
+
+  useEffect(() => {
+    getOrders(user._id).catch(() => {
+      return;
+    })
+  },[getOrders, user])
 
   const renderContent = () => {
     switch (option) {
@@ -69,4 +78,13 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+UserDashboard.propTypes = {
+  getOrders: PropTypes.func
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth.user
+})
+
+
+export default connect(mapStateToProps, {getOrders})(UserDashboard)

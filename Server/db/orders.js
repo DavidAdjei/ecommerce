@@ -44,6 +44,11 @@ const orderSchema = new Schema({
     deliveryAddress: {
         type: String,
         required: true
+    },
+    payment: {
+        type: String,
+        enum: ['Pending', 'Paid', 'pending', 'paid'],
+        default: 'Pending'
     }
 });
 

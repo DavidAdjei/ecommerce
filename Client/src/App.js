@@ -22,19 +22,42 @@ const Contact = lazy(() => import("./Pages/Contact/Contact"));
 const About = lazy(() => import("./Pages/About/About"));
 const SignUp = lazy(() => import("./Pages/SignUp/SignUp"));
 const Login = lazy(() => import("./Pages/LogIn/LogIn"));
+const Profile = lazy(() => import("./Pages/Profile/Profile"));
+const Favourites = lazy(() => import( "./Pages/Favourites/Favourites"));
+const Orders = lazy(() => import( "./Pages/Orders/Orders"));
+const Address = lazy(() => import( "./Pages/Address/Address"));
 
 
 const App = ({ getProducts, setFeaturedProducts, checkAuth, setFeedback, feedback }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    setLoading(true)
     getProducts().then((res) => {
       const popular = res.products.filter(product => product.popular === true);
       setFeaturedProducts(popular);
-      setLoading(false)
-    }).catch((err => setFeedback({error: err})));
-    checkAuth().catch(err => console.log(err));
+      checkAuth().then(() => {
+        setLoading(false)
+      }).catch(err => {
+        setFeedback({ error: err });
+        setLoading(false)
+      });
+    }).catch(err => {
+      setFeedback({ error: err })
+      checkAuth().then(() => {
+        setLoading(false)
+      }).catch(err => {
+        setFeedback({ error: err });
+        setLoading(false)
+      });
+    });
   },[getProducts, setFeaturedProducts, checkAuth, setFeedback])
+
+  if (loading) {
+    return (
+      <Loader/>
+    )
+  }
+
   return (
     <div className="App">
       <NavBar />
@@ -49,12 +72,15 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth, setFeedback, feedbac
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/signUp" element={<SignUp />} />
-            <Route path="/login" element={<Login/>} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/favourites" element={<Favourites />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/edit-address" element={<Address />} />
           </Routes>
         </Suspense> 
       </div>
       <Footer />
-      {loading && <Loader />}
     </div>
   );
 };

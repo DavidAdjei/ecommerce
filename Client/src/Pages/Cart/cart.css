@@ -71,19 +71,21 @@
 }
 
 .subtotal {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 18px;
 }
 
 .proceed {
-  background-color: #27ae60;
+  background-color: #f5a022;
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .proceed:hover {
-  background-color: #219150;
+  background-color: #f7b95c;
 }

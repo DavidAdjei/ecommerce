@@ -3,17 +3,21 @@ import React, { useEffect } from "react";
 import "./ProductDetails.css";
 import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
-import { getSelectedProduct, setFeedback } from "../../redux/Actions/productActions";
+import {
+  getSelectedProduct,
+  setFeedback,
+} from "../../redux/Actions/productActions";
 import Button from "@mui/material/Button";
 import { Rating } from "@mui/material";
 import { addToCart } from "../../redux/Actions/cartActions";
 import Loader from "../../features/Loader";
+import { IoCartOutline } from "react-icons/io5";
 
 const ProductDetails = ({
   getSelectedProduct,
   selectedProduct,
   addToCart,
-  setFeedback
+  setFeedback,
 }) => {
   const { id } = useParams();
 
@@ -22,10 +26,10 @@ const ProductDetails = ({
   }, []);
 
   const fetchProduct = () => {
-    getSelectedProduct(id).catch((err) => setFeedback({error: err}));
+    getSelectedProduct(id).catch((err) => setFeedback({ error: err }));
   };
 
-  if (!selectedProduct) return <Loader/>;
+  if (!selectedProduct) return <Loader />;
 
   return (
     <div className="product-details">
@@ -42,17 +46,15 @@ const ProductDetails = ({
           size="large"
           precision={0.1}
         />
-        <Button
+        <button
+          className="addToCartButton"
           onClick={() => {
             addToCart(selectedProduct);
             setFeedback({ message: "Item Added" });
           }}
-          variant="contained"
-          color="secondary"
-          sx={{ alignSelf: "center" }}
         >
-          Add to cart
-        </Button>
+          <IoCartOutline size={20} style={{ marginRight: "8" }} /> Add to cart
+        </button>
       </div>
       <div className="product-details-right">
         <h3>Specifications</h3>
@@ -92,6 +94,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getSelectedProduct, addToCart, setFeedback })(
-  ProductDetails
-);
+export default connect(mapStateToProps, {
+  getSelectedProduct,
+  addToCart,
+  setFeedback,
+})(ProductDetails);

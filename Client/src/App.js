@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import { connect } from "react-redux";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import NavBar from "./component/NavBar";
 import Footer from "./component/footer";
@@ -13,6 +13,7 @@ import {
   setFeedback,
 } from "./redux/Actions/productActions";
 import { checkAuth } from "./redux/Actions/authActions";
+import Protected from "./features/Protected";
 
 const Homepage = lazy(() => import("./Pages/HomePage/Homepage"));
 const ProductsPage = lazy(() => import("./Pages/ProductsPage/ProductsPage"));
@@ -22,13 +23,12 @@ const Contact = lazy(() => import("./Pages/Contact/Contact"));
 const About = lazy(() => import("./Pages/About/About"));
 const SignUp = lazy(() => import("./Pages/SignUp/SignUp"));
 const Login = lazy(() => import("./Pages/LogIn/LogIn"));
-const Profile = lazy(() => import("./Pages/Profile/Profile"));
-const Favourites = lazy(() => import( "./Pages/Favourites/Favourites"));
-const Orders = lazy(() => import( "./Pages/Orders/Orders"));
-const Address = lazy(() => import( "./Pages/Address/Address"));
+const UserDashboard = lazy(() => import("./Pages/Profile/UserDashboard"));
+const Favourites = lazy(() => import("./Pages/Favourites/Favourites"));
+const Checkout = lazy(() => import("./Pages/Checkout/Checkout"))
 
 
-const App = ({ getProducts, setFeaturedProducts, checkAuth, setFeedback, feedback }) => {
+const App = ({ getProducts, setFeaturedProducts, checkAuth, setFeedback, feedback, cart }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -68,15 +68,14 @@ const App = ({ getProducts, setFeaturedProducts, checkAuth, setFeedback, feedbac
             <Route path="/" exact element={<Homepage />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/shop" element={<ProductsPage />} />
-            <Route path="/cart" element={<Cart />} />
+            <Route path="/cart" element={ <Protected> <Cart /> </Protected>  } />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<Protected> <UserDashboard /> </Protected>} />
+            <Route path="/checkout" element={ Object.values(cart).length < 1 ? <Navigate to="/"/> : <Protected> <Checkout /> </Protected> } />
             <Route path="/favourites" element={<Favourites />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/edit-address" element={<Address />} />
           </Routes>
         </Suspense> 
       </div>
@@ -93,7 +92,8 @@ App.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  feedback: state.product.feedback
+  feedback: state.product.feedback,
+  cart: state.cart.cart
 });
 
 export default connect(mapStateToProps, { getProducts, setFeaturedProducts, checkAuth, setFeedback })(

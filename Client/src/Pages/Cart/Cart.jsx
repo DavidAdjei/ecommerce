@@ -5,10 +5,10 @@ import { connect } from "react-redux";
 import CartItem from "../../component/CartItem";
 import "./cart.css";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { placeOrder } from "../../redux/Actions/cartActions";
 import { setFeedback } from "../../redux/Actions/productActions";
+import Loader from "../../features/Loader";
 
-export const Cart = ({ cart, placeOrder, user, setFeedback }) => {
+export const Cart = ({ cart, user, setFeedback }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const calculateTot = () => {
@@ -19,24 +19,20 @@ export const Cart = ({ cart, placeOrder, user, setFeedback }) => {
     });
     return total;
   };
-  // if (Object.values(cart).length === 0) {
-  //     return <p>Cart is empty</p>;
-  // }
 
-  const submitOrder = () => {
+  const handleProceed = () => {
     setLoading(true);
     if (!user) {
       setFeedback({error: "You need to log in first"});
       const query = new URLSearchParams({
         page: '/cart',
       });
-      setLoading(false);
-      navigate(`/login?${query.toString()}`);
-    } else {
-      placeOrder(user._id, cart).then((res) => {
+      setTimeout(() => {
         setLoading(false);
-        window.location.href = res?.data?.authorization_url;
-      }).catch(err => setFeedback({error: err}));
+        navigate(`/login?${query.toString()}`);
+      }, 2000);
+    } else {
+      navigate('/checkout');
     }
   }
 
@@ -85,11 +81,12 @@ export const Cart = ({ cart, placeOrder, user, setFeedback }) => {
               Subtotal: <strong>GHS </strong>
               {calculateTot().toFixed(2)}
             </div>
-            <button className="checkout" onClick={submitOrder}>Proceed to Checkout</button>
+            <button className="proceed" onClick={handleProceed}>Proceed to Checkout</button>
           </div>
         </div>
       )
       };
+      {loading && <Loader/>}
     </div>
   )
 };
@@ -103,4 +100,4 @@ const mapStateToProps = (state) => ({
   user: state.auth.user
 });
 
-export default connect(mapStateToProps, {placeOrder, setFeedback})(Cart);
+export default connect(mapStateToProps, {setFeedback})(Cart);

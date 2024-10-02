@@ -45,7 +45,7 @@ exports.postOrder = async (req, res) => {
         const params = JSON.stringify({
             "email": user.email,
             "amount": savedOrder.totalPrice * 100,
-            "callback_url": 'http://localhost:3000/',
+            "callback_url": 'http://localhost:3000/profile?option=Orders',
         })
 
         const options = {

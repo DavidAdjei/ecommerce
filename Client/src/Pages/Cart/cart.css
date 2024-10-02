@@ -75,7 +75,7 @@
   font-size: 18px;
 }
 
-.checkout {
+.proceed {
   background-color: #27ae60;
   color: white;
   border: none;
@@ -84,6 +84,6 @@
   cursor: pointer;
 }
 
-.checkout:hover {
+.proceed:hover {
   background-color: #219150;
 }

@@ -56,7 +56,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: aquamarine;
+  background-color: #f5a022;
   height: 2rem;
   width: 18rem;
   outline: none;
@@ -64,6 +64,8 @@
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
 }
 .nav {
   width: 100%;
@@ -105,7 +107,7 @@
   margin: 30px;
 }
 .left a:hover {
-  color: #e74c3c;
+  color: #f5a022;
 }
 
 .right {
@@ -123,7 +125,7 @@
   color: rgb(48, 47, 47);
 }
 .right a:hover {
-  color: #e74c3c;
+  color: #f5a022;
 }
 
 .search_input {
@@ -241,7 +243,7 @@
 .remove-item {
   background-color: transparent;
   border: none;
-  color: #e74c3c;
+  color: #f5a022;
   cursor: pointer;
   font-size: 18px;
 }
@@ -252,7 +254,9 @@
 }
 
 .item-qty button {
-  background-color: #ddd;
+  background-color: #f5a022;
+  color: #fff;
+  font-weight: 700;
   border: none;
   padding: 5px 10px;
   cursor: pointer;

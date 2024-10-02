@@ -23,18 +23,18 @@ export const Cart = ({ cart, user, setFeedback }) => {
   const handleProceed = () => {
     setLoading(true);
     if (!user) {
-      setFeedback({error: "You need to log in first"});
+      setFeedback({ error: "You need to log in first" });
       const query = new URLSearchParams({
-        page: '/cart',
+        page: "/cart",
       });
       setTimeout(() => {
         setLoading(false);
         navigate(`/login?${query.toString()}`);
       }, 2000);
     } else {
-      navigate('/checkout');
+      navigate("/checkout");
     }
-  }
+  };
 
   return (
     <div className="cart-container">
@@ -78,17 +78,18 @@ export const Cart = ({ cart, user, setFeedback }) => {
           </div>
           <div className="cart-footer">
             <div className="subtotal">
-              Subtotal: <strong>GHS </strong>
+              Subtotal: <strong>GH&#8373; </strong>
               {calculateTot().toFixed(2)}
             </div>
-            <button className="proceed" onClick={handleProceed}>Proceed to Checkout</button>
+            <button className="proceed" onClick={handleProceed}>
+              Proceed to Checkout
+            </button>
           </div>
         </div>
-      )
-      };
-      {loading && <Loader/>}
+      )}
+      {loading && <Loader />}
     </div>
-  )
+  );
 };
 
 Cart.propTypes = {
@@ -97,7 +98,7 @@ Cart.propTypes = {
 
 const mapStateToProps = (state) => ({
   cart: state.cart.cart,
-  user: state.auth.user
+  user: state.auth.user,
 });
 
-export default connect(mapStateToProps, {setFeedback})(Cart);
+export default connect(mapStateToProps, { setFeedback })(Cart);

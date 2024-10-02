@@ -64,7 +64,6 @@ Homepage.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  console.log("Redux state:", state);
   return {
     featuredProducts: state.product.featuredProducts,
     products: state.product.products,

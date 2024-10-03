@@ -69,3 +69,43 @@
   padding-left: 2.9rem;
   font-size: 1.05rem;
 }
+
+hr {
+  height: 2px;
+  width: 300px;
+  background-color: #c3c0fa;
+  margin-top: 5px;
+}
+
+.login-actions {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  padding: 1rem;
+}
+
+.google-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #c3c0fa;
+  width: 270px;
+  height: 35px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.google-btn:hover {
+  background: #e5f7f181;
+}
+
+.login-actions p {
+  font-size: 16px;
+  font-weight: 700;
+}

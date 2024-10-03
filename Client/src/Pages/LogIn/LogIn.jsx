@@ -6,8 +6,10 @@ import UserInput from "../../features/UserInput";
 import Logo from "../../assets/images/Logo.jpeg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Loader from "../../features/Loader";
+import { FcGoogle } from "react-icons/fc";
 import "./auth.css"
 import { setFeedback } from "../../redux/Actions/productActions";
+import getGoogleLink from "../../features/util";
 
 function Login({signin, setFeedback}) {
   const [credentials, setCredentials] = useState({
@@ -69,6 +71,19 @@ function Login({signin, setFeedback}) {
           />
           <input type="submit" className="auth_submit"/>
         </form>
+        <div className="login-actions">
+          <p>Or Login With</p>
+          <hr />
+          <button
+            className="google-btn"
+            onClick={() => {
+              window.location.href = getGoogleLink();
+            }}
+          >
+            <FcGoogle />
+            <p>Google</p>
+          </button>
+        </div>
       </div>
       {loading && <Loader/>}
     </div>

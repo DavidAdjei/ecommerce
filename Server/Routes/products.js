@@ -1,10 +1,9 @@
 const router = require('express').Router()
-const { addProducts, products, uploadImage, editProduct, deleteProduct, product } = require("../Controllers/products");
-const { upload } = require('../helpers/products');
+const { addProducts, products, product } = require("../Controllers/products");
 
 router.post("/", addProducts);
 router.get("/", products);
 router.get("/:id", product);
-router.post("/uploadImage",upload.single('image'), uploadImage);
+
 
 module.exports  = router

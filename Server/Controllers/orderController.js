@@ -1,6 +1,7 @@
 const User = require('../db/user');
 const Order = require('../db/orders');
-const https = require('https')
+const https = require('https');
+const { default: axios } = require('axios');
 
 
 const calculateTot = (order) => {
@@ -32,7 +33,10 @@ exports.postOrder = async (req, res) => {
             orderItem.specifications = product.specs;
             orderItem.image = product.imgs;
             orderArray.push(orderItem);
+            orderItem ={}
         })
+
+        console.log({orderArray})
 
         const newOrder = new Order({
             userId,
@@ -67,7 +71,6 @@ exports.postOrder = async (req, res) => {
             });
 
             response.on('end', () => {
-                console.log(JSON.parse(data));
                 const d = JSON.parse(data);
                 return res.status(200).json(d);
             })
@@ -84,69 +87,51 @@ exports.postOrder = async (req, res) => {
     }
 }
 
-exports.verifyOrderPayment = async (req, res) => { 
+exports.verifyOrderPayment = async (req, res) => {
     const paystackSecretKey = process.env.PAYSTACK_SECRET;
     const ref = req.query.reference;
-    console.log("Ref: ", ref)
+    console.log("Ref: ", ref);
 
-    const options = {
-        hostname: 'api.paystack.co',
-        path: `/transaction/verify/${ref}`,
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${paystackSecretKey}`
-        }
-    };
-
-    const paystackRequest = https.request(options, paystackResponse => {
-        let data = '';
-
-        paystackResponse.on('data', chunk => {
-            data += chunk;
+    try {
+        const paystackResponse = await axios.get(`https://api.paystack.co/transaction/verify/${ref}`, {
+            headers: {
+                Authorization: `Bearer ${paystackSecretKey}`,
+            },
         });
+        const { data } = paystackResponse.data;
+        console.log({ data });
+        if (data.status === 'success') {
+            const { customer, authorization, reference } = data;
 
-        paystackResponse.on('end', async () => {
-            const transactionData = JSON.parse(data);
-            console.log(transactionData);
-            if (transactionData.data.status === 'success') {
-                const { customer, authorization, reference } = transactionData.data;
-                console.log("Customer: ", customer)
-                console.log("Auth: ", authorization)
-                console.log("Ref: ", reference)
-                try {
-                    const existingOrder = await Order.findOne({ _id: reference });
-                    if (!existingOrder) {
-                        console.log("Error");
-                        return res.status(500).json({ error: 'Order not found' });
-                    }
-
-                    const user = await User.findOne({ email: customer.email });
-                    if (!user) {
-                        return res.status(404).json({ error: 'User not found' });
-                    }
-
-                    user.paystackSecret = authorization.authorization_code;
-                    existingOrder.payment = "Paid";
-                    await user.save();
-                    await existingOrder.save();
-                    
-                    res.status(200).json({ message: 'Payment received' });
-                } catch (error) {
-                    console.error('Error updating order', error);
-                    res.status(500).json({ error: 'An error occurred while updating order' });
+            try {
+                const existingOrder = await Order.findById(reference); 
+                if (!existingOrder) {
+                    console.log("Error: Order not found");
+                    return res.status(404).json({ error: 'Order not found' }); 
                 }
-            }else {
-                res.status(400).json({ error: 'Transaction verification failed or payment was not successful' });
+
+                const user = await User.findOne({ email: customer.email });
+                if (!user) {
+                    return res.status(404).json({ error: 'User not found' });
+                }
+
+                user.paystackSecret = authorization.authorization_code;
+                existingOrder.payment = "Paid";
+                await user.save();
+                await existingOrder.save();
+
+                return res.status(200).json({ message: 'Payment received' });
+            } catch (error) {
+                console.error('Error updating order:', error);
+                return res.status(500).json({ error: 'An error occurred while updating the order' });
             }
-        });
-    });
-
-    paystackRequest.on('error', error => {
+        } else {
+            return res.status(400).json({ error: 'Transaction verification failed or payment was not successful' });
+        }
+    } catch (error) {
         console.error('Paystack request error:', error);
-        res.status(500).json({ error: 'An error occurred while verifying transaction' });
-    });
-
-    paystackRequest.end();
+        return res.status(500).json({ error: 'An error occurred while verifying the transaction' });
+    }
 };
 
 exports.getAllOrders = async (req, res) => { 

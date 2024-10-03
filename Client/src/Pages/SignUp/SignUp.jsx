@@ -7,6 +7,8 @@ import "../LogIn/auth.css"
 import { signUp } from '../../redux/Actions/authActions';
 import { useNavigate } from 'react-router-dom';
 import { setFeedback } from '../../redux/Actions/productActions';
+import getGoogleLink from '../../features/util';
+import { FcGoogle } from 'react-icons/fc';
 
 
 function SignUp({signUp, setFeedback}) {
@@ -86,6 +88,19 @@ function SignUp({signUp, setFeedback}) {
                     />
                     <input type="submit" disabled={loading} className='auth_submit' />
                 </form>
+                <div className="login-actions">
+                    <p>Or Continue With</p>
+                    <hr />
+                    <button
+                        className="google-btn"
+                        onClick={() => {
+                        window.location.href = getGoogleLink();
+                        }}
+                    >
+                        <FcGoogle />
+                        <p>Google</p>
+                    </button>
+                </div>
             </div>
         </div>
         

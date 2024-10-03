@@ -1,6 +1,7 @@
 const User = require("../db/user");
 const jwt = require("jsonwebtoken");
-const { hashPassword, comparePassword } = require("../helpers/auth");
+const { hashPassword, comparePassword, getGoogleUser } = require("../helpers/auth");
+const { googleoauth } = require("../helpers/auth");
 
 const cookieOptions = {
     httpOnly: true,
@@ -60,7 +61,6 @@ exports.signUp = async (req, res) => {
 }
 
 exports.signin = async (req, res) => {
-    console.log("Preparing to Sign In");
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
@@ -90,6 +90,53 @@ exports.signin = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: err.message });
+    }
+}
+
+exports.loginWithGoogle = async (req, res) => {
+    try {
+        const { code } = req.query;
+        if (!code) {
+            return res.status(400).json({ error: "Authorization code is required" });
+        } 
+        const { id_token, access_token } = await googleoauth(code);
+        if (!id_token, !access_token) {
+            return res.status(400).json({ error: "Failed to retrieve tokens from google" });
+        }
+        const googleUser = await getGoogleUser(id_token, access_token);
+        if (!googleUser) {
+            return res.status(404).json({error: "Failed to fetch user"})
+        }
+
+        const user = await User.findOneAndUpdate(
+            { email: googleUser.email }, {
+            email: googleUser.email,
+            firstName: googleUser.given_name,
+            lastName: googleUser.family_name,
+            verified: googleUser.email_verified,
+            image: {
+                url: googleUser.picture
+            }
+        },
+            {
+                upsert: true,
+                new: true
+            }
+        );
+
+        if (!user) {
+            return res.status(409).json({ error: "Error creating user" });
+        }
+
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: "7d",
+        });
+        res.cookie('auth_token', token, cookieOptions);
+
+        res.redirect(process.env.CLIENT_SIDE_URL);
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ error: err.message });
     }
 }
 

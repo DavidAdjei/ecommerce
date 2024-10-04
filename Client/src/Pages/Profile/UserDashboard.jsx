@@ -8,7 +8,7 @@ import OrdersContent from '../../component/UserDashboard/OrdersContent';
 import WishlistContent from '../../component/UserDashboard/WishlistContent';
 import SettingsContent from '../../component/UserDashboard/SettingsContent';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getOrders } from '../../redux/Actions/authActions';
+import { getOrders, logout } from '../../redux/Actions/authActions';
 
 const menuItems = [
   { id: 1, label: "Profile" },
@@ -17,7 +17,7 @@ const menuItems = [
   { id: 4, label: "Settings" },
 ];
 
-const UserDashboard = ({getOrders, user}) => {
+const UserDashboard = ({getOrders, user, logout}) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const option = searchParams.get("option") || "Profile";
@@ -42,6 +42,10 @@ const UserDashboard = ({getOrders, user}) => {
         return <ProfileContent />;
     }
   };
+
+  const handleLogout = () => {
+    logout();
+  }
 
   return (
     <Box className="user_dashboard" sx={{ display: "flex" }}>
@@ -70,6 +74,9 @@ const UserDashboard = ({getOrders, user}) => {
                 <ListItemText primary={item.label} />
               </ListItem>
             ))}
+            <ListItem button onClick={handleLogout}>
+              <ListItemText primary="Logout"/>
+            </ListItem>
           </List>
         </Box>
       </Drawer>
@@ -95,7 +102,8 @@ const UserDashboard = ({getOrders, user}) => {
 };
 
 UserDashboard.propTypes = {
-  getOrders: PropTypes.func
+  getOrders: PropTypes.func,
+  logout: PropTypes.func
 }
 
 const mapStateToProps = (state) => ({
@@ -103,4 +111,4 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps, {getOrders})(UserDashboard)
+export default connect(mapStateToProps, {getOrders, logout})(UserDashboard)

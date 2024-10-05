@@ -69,9 +69,9 @@
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.5);
   overflow: hidden;
-  z-index: 200;
+  z-index: 20000;
 }
 
 .loader_container .Atom {
-  z-index: 1000;
+  z-index: 100000;
 }

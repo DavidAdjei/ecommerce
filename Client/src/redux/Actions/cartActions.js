@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADD_TO_CART, DECREMENT, INCREMENT, REMOVE_FROM_CART } from "../constants";
+import { ADD_TO_CART, DECREMENT, EMPTY_CART, INCREMENT, REMOVE_FROM_CART } from "../constants";
 
 export const addToCart = (product) => ({
     type: ADD_TO_CART,
@@ -21,8 +21,12 @@ export const removeFromCart = (itemId) => ({
     payload: itemId
 })
 
+export const emptyCart = () => ({
+    type: EMPTY_CART
+})
+
 export const placeOrder = (userId, order) => {
-    return async (dispatch) => {
+    return async () => {
         try {
            const response = await axios.post(`${process.env.REACT_APP_SERVER}/order/${userId}`, {order});
             if (!response.data.error) {
@@ -39,7 +43,7 @@ export const placeOrder = (userId, order) => {
 }
 
 export const verifyPayment = (reference) => {
-    return async (dispatch) => {
+    return async () => {
         try {
             const response = await axios.put(`${process.env.REACT_APP_SERVER}/order/verify?reference=${reference}`);
             if (!response.data.error) {

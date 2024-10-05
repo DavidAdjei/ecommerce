@@ -1,9 +1,10 @@
-import { SET_AUTH, SET_ORDERS, SET_USER } from "../constants";
+import { SET_AUTH, SET_ORDERS, SET_USER, SET_WISHLIST } from "../constants";
 
 const initialState = {
     user: null,
     isAuth: false,
-    orders: []
+    orders: [],
+    wishList: [],
 };
 
 const authReducer = (state = initialState, action) => {
@@ -22,6 +23,11 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 orders: action.payload
+            }
+        case SET_WISHLIST: 
+            return {
+                ...state,
+                wishList: action.payload
             }
         default:
             return state;

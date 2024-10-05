@@ -2,6 +2,7 @@ const User = require("../db/user");
 const jwt = require("jsonwebtoken");
 const { hashPassword, comparePassword, getGoogleUser } = require("../helpers/auth");
 const { googleoauth } = require("../helpers/auth");
+const { uploadSingleImage } = require("../helpers/upload");
 
 const cookieOptions = {
     httpOnly: true,
@@ -168,6 +169,44 @@ exports.isAuth = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.editUser = async (req, res) => {
+    try {
+        const { credentials } = req.body;
+        const { id } = req.params;
+        const user = await User.findOneAndUpdate({_id: id}, credentials, {new: true});
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        return res.status(200).json({ message: "User updated successfully"});
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({error: err.message});
+    }
+}
+
+exports.editImage = async (req, res) => {
+    try {
+        const { file } = req;
+        const { id } = req.params;
+        console.log(file);
+        if (!file) {
+            return res.status(401).json({ error: 'No file uploaded' });
+        }
+        const { imageUrl } = await uploadSingleImage(file);
+        if (!imageUrl) {
+            return res.status(404).json({error: 'Failed to upload image'});
+        }
+        const user = await User.findOneAndUpdate({_id: id}, {image: {url: imageUrl}}, {new: true});
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        return res.status(200).json({ message: "Image uploaded successfully"});
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: err.message });
+    }
+}
 
 exports.logout = async (req, res) => {
     console.log(req.cookies);

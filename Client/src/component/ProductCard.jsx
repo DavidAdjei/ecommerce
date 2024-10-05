@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import "./component.css";
@@ -17,6 +17,10 @@ const ProductCard = ({
   addToWishlist,
   user,
 }) => {
+  const isInWishlist = useMemo(() => {
+    return user && user?.wishlist && user?.wishlist?.includes(product._id);
+  }, [user, product]);
+
   const handleAddToWish = () => {
     if (!user) {
       setFeedback({ error: "You need to login first" });
@@ -48,7 +52,11 @@ const ProductCard = ({
         </button>
         {user && (
           <button className="addToWishlistButton" onClick={handleAddToWish}>
-            <FaHeart size={20} style={{ marginRight: "8" }} />
+            {isInWishlist ? (
+              <FaHeart size={20} style={{ marginRight: "8px" }} color="red" />
+            ) : (
+              <FaHeart size={20} style={{ marginRight: "8px" }} />
+            )}
           </button>
         )}
       </div>

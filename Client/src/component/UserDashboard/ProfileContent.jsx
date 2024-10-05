@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import PropTypes from "prop-types";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -11,27 +11,27 @@ import {
   MenuItem,
   Avatar,
   IconButton,
-} from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { connect } from 'react-redux';
-import { editUser, uploadImage } from '../../redux/Actions/authActions';
-import { setFeedback } from '../../redux/Actions/productActions';
+} from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { connect } from "react-redux";
+import { editUser, uploadImage } from "../../redux/Actions/authActions";
+import { setFeedback } from "../../redux/Actions/productActions";
 
 const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    email: user?.email || '',
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    email: user?.email || "",
     address: {
-      city: user.address?.city || '',
+      city: user.address?.city || "",
       region: user.address?.region || "",
-      street: user.address?.street || '',
-      houseNumber: user.address?.houseNumber || '',
-      ghanaPost: user.address?.ghanaPost || '',
-    }    
+      street: user.address?.street || "",
+      houseNumber: user.address?.houseNumber || "",
+      ghanaPost: user.address?.ghanaPost || "",
+    },
   });
 
-  const [image, setImage] = useState(user?.image.url || null); 
+  const [image, setImage] = useState(user?.image.url || null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +48,7 @@ const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
       address: {
         ...formData.address,
         [name]: value,
-      }
+      },
     });
   };
 
@@ -62,14 +62,18 @@ const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
       reader.readAsDataURL(file);
       const formData = new FormData();
       formData.append("image", file);
-      uploadImage(formData, user._id).then(res => setFeedback(res)).catch(err => setFeedback({error: err}))
+      uploadImage(formData, user._id)
+        .then((res) => setFeedback(res))
+        .catch((err) => setFeedback({ error: err }));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.firstName !== "" || formData.lastName !== "") {
-      editUser(formData, user._id).then(res => setFeedback(res)).catch(error => setFeedback({ error }));
+      editUser(formData, user._id)
+        .then((res) => setFeedback(res))
+        .catch((error) => setFeedback({ error }));
     } else {
       setFeedback({ error: "Name is required" });
     }
@@ -77,30 +81,48 @@ const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Paper elevation={3} sx={{ padding: 3, display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <Paper
+        elevation={3}
+        sx={{
+          padding: 3,
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
         <Box display="flex" justifyContent="center" mb={2}>
-          <IconButton onClick={() => document.getElementById('imageUpload').click()}>
+          <IconButton
+            onClick={() => document.getElementById("imageUpload").click()}
+          >
             <Avatar
               alt="User Image"
               sx={{
                 width: 180,
                 height: 180,
-                cursor: 'pointer',
-                bgcolor: image ? 'transparent' : 'grey.300',
+                cursor: "pointer",
+                bgcolor: image ? "transparent" : "grey.300",
               }}
             >
               {image ? (
-                <img src={image} alt="User" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                <img
+                  src={image}
+                  alt="User"
+                  style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+                />
               ) : (
-                <AccountCircleIcon sx={{ width: '80%', height: '80%', color: 'white' }} />
+                <AccountCircleIcon
+                  sx={{ width: "80%", height: "80%", color: "white" }}
+                />
               )}
             </Avatar>
-            <Typography position="absolute" sx={{top: "12rem"}} variant='p'>{ !image ? "Upload Image" : "Change Image" }</Typography>
+            <Typography position="absolute" sx={{ top: "12rem" }} variant="p">
+              {!image ? "Upload Image" : "Change Image"}
+            </Typography>
           </IconButton>
           <input
             type="file"
             id="imageUpload"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             accept="image/*"
             onChange={handleImageUpload}
           />
@@ -110,7 +132,7 @@ const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid2 container spacing={2}>
-            <Grid2 container spacing={2} size={12}>
+            <Grid2 container spacing={2} size={8}>
               <Grid2 item="true" size={6}>
                 <TextField
                   fullWidth
@@ -132,7 +154,7 @@ const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
                 />
               </Grid2>
             </Grid2>
-            <Grid2 item="true" size={12}>
+            <Grid2 item="true" size={6}>
               <TextField
                 fullWidth
                 label="Email"
@@ -148,7 +170,7 @@ const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
           <Typography variant="h6" paddingBlock={2}>
             Address Details
           </Typography>
-          <Grid2 container size={12} spacing={2}>
+          <Grid2 container size={8} spacing={2}>
             <Grid2 item="true" size={6}>
               <TextField
                 fullWidth
@@ -166,20 +188,26 @@ const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
                 value={formData.address.region}
                 onChange={handleAddressChange}
               >
-                <MenuItem value="" disabled>Choose a region</MenuItem>
+                <MenuItem value="" disabled>
+                  Choose a region
+                </MenuItem>
                 <MenuItem value="Ahafo Region">Ahafo Region</MenuItem>
                 <MenuItem value="Ashanti Region">Ashanti Region</MenuItem>
                 <MenuItem value="Bono East Region">Bono East Region</MenuItem>
                 <MenuItem value="Bono Region">Bono Region</MenuItem>
                 <MenuItem value="Central Region">Central Region</MenuItem>
                 <MenuItem value="Eastern Region">Eastern Region</MenuItem>
-                <MenuItem value="Greater Accra Region">Greater Accra Region</MenuItem>
+                <MenuItem value="Greater Accra Region">
+                  Greater Accra Region
+                </MenuItem>
                 <MenuItem value="Northern Region">Northern Region</MenuItem>
                 <MenuItem value="North East Region">North East Region</MenuItem>
                 <MenuItem value="Oti Region">Oti Region</MenuItem>
                 <MenuItem value="Volta Region">Volta Region</MenuItem>
                 <MenuItem value="Western Region">Western Region</MenuItem>
-                <MenuItem value="Western North Region">Western North Region</MenuItem>
+                <MenuItem value="Western North Region">
+                  Western North Region
+                </MenuItem>
               </Select>
             </Grid2>
             <Grid2 item="true" size={6}>
@@ -211,7 +239,11 @@ const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
             </Grid2>
           </Grid2>
           <Box sx={{ marginTop: 2 }}>
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ backgroundColor: "#f5a022" }}
+            >
               Save Changes
             </Button>
           </Box>
@@ -224,11 +256,13 @@ const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
 ProfileContent.propTypes = {
   user: PropTypes.object,
   editUser: PropTypes.func.isRequired,
-  uploadImage: PropTypes.func.isRequired
+  uploadImage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps, {uploadImage, setFeedback, editUser})(ProfileContent);
+export default connect(mapStateToProps, { uploadImage, setFeedback, editUser })(
+  ProfileContent
+);

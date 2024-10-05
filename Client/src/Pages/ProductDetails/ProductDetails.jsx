@@ -12,6 +12,7 @@ import { Rating } from "@mui/material";
 import { addToCart } from "../../redux/Actions/cartActions";
 import Loader from "../../features/Loader";
 import { IoCartOutline } from "react-icons/io5";
+import { FaHeart } from "react-icons/fa";
 
 const ProductDetails = ({
   getSelectedProduct,
@@ -46,6 +47,9 @@ const ProductDetails = ({
           size="large"
           precision={0.1}
         />
+        <button>
+          <FaHeart size={20} style={{ marginRight: "8" }} />
+        </button>
         <button
           className="addToCartButton"
           onClick={() => {

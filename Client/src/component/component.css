@@ -101,7 +101,7 @@
   border: none;
   cursor: pointer;
   transition: transform 0.2s;
-  color: red;
+
   top: 25px;
   right: 15px;
 }

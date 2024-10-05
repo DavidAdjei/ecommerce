@@ -6,19 +6,21 @@ import ProductCard from "../../component/ProductCard";
 import Pagination from "@mui/material/Pagination";
 import "./products.css";
 import Filter from "../../component/Filter";
-// import Button from "@mui/material/Button";
 import {
   getCategories,
   setFilteredProducts,
 } from "../../redux/Actions/productActions";
 import Loader from "../../features/Loader";
 import { BsFilterLeft } from "react-icons/bs";
+import { getWishlist } from "../../redux/Actions/authActions";
 
 const ProductsPage = ({
+  user,
   products,
   getCategories,
   setFilteredProducts,
   filteredProducts,
+  getWishlist
 }) => {
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(1);
@@ -101,6 +103,9 @@ const ProductsPage = ({
 
   useEffect(() => {
     setLoading(true);
+    if (user) {
+      getWishlist(user._id)
+    }
     if (searchKeyword) {
       const newProducts = products.filter((product) =>
         product.title.toLowerCase().includes(searchKeyword.toLowerCase())
@@ -109,22 +114,13 @@ const ProductsPage = ({
       setLoading(false);
     }
     setLoading(false);
-  }, [products, searchKeyword, setFilteredProducts]);
+  }, [products, searchKeyword, setFilteredProducts, getWishlist, user]);
 
   return (
     <div className="product_page">
       <button className="filter-btn" onClick={() => setVisible(!visible)}>
         <BsFilterLeft size={30} /> Filter
       </button>
-
-      {/* <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => setVisible(!visible)}
-        sx={{ alignSelf: "flex-start", m: "1rem 0 0 4rem" }}
-      >
-        Filter
-      </Button> */}
       <div className="product_list">
         {currentProducts.length > 0 ? (
           currentProducts.map((product, index) => (
@@ -159,8 +155,9 @@ ProductsPage.propTypes = {
 const mapStateToProps = (state) => ({
   products: state.product.products,
   filteredProducts: state.product.filteredProducts,
+  user: state.auth.user
 });
 
-export default connect(mapStateToProps, { getCategories, setFilteredProducts })(
+export default connect(mapStateToProps, { getCategories, setFilteredProducts, getWishlist })(
   ProductsPage
 );

@@ -6,9 +6,9 @@ import "./component.css";
 import { addToCart } from "../redux/Actions/cartActions";
 import { IoCartOutline } from "react-icons/io5";
 import { setFeedback } from "../redux/Actions/productActions";
-import { addToWishlist } from "../redux/Actions/authActions";
+import { addToWishlist, removeFromWishlist } from "../redux/Actions/authActions";
 
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const ProductCard = ({
   product,
@@ -16,10 +16,12 @@ const ProductCard = ({
   setFeedback,
   addToWishlist,
   user,
+  wishList,
+  removeFromWishlist
 }) => {
   const isInWishlist = useMemo(() => {
-    return user && user?.wishlist && user?.wishlist?.includes(product._id);
-  }, [user, product]);
+    return user && wishList && wishList.some(p => p._id === product._id);
+  }, [user, product, wishList]);
 
   const handleAddToWish = () => {
     if (!user) {
@@ -30,6 +32,18 @@ const ProductCard = ({
         .catch((error) => setFeedback({ error }));
     }
   };
+
+  const handleRemove = () => {
+    if (!user) {
+      setFeedback({ error: "You need to login first" });
+    } else {
+      removeFromWishlist(user._id, product._id)
+        .then((res) => setFeedback(res))
+        .catch((error) => setFeedback({ error }));
+    }
+  };
+
+  
   return (
     <div className="product-card">
       <Link to={`/product/${product._id}`}>
@@ -51,11 +65,11 @@ const ProductCard = ({
           <IoCartOutline size={20} style={{ marginRight: "8" }} /> Add to cart
         </button>
         {user && (
-          <button className="addToWishlistButton" onClick={handleAddToWish}>
+          <button className="addToWishlistButton" onClick={ !isInWishlist ? handleAddToWish : handleRemove}>
             {isInWishlist ? (
               <FaHeart size={20} style={{ marginRight: "8px" }} color="red" />
             ) : (
-              <FaHeart size={20} style={{ marginRight: "8px" }} />
+              <FaRegHeart size={20} style={{ marginRight: "8px" }} color="red"/>
             )}
           </button>
         )}
@@ -70,10 +84,12 @@ ProductCard.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
+  wishList: state.auth.wishList,
 });
 
 export default connect(mapStateToProps, {
   addToCart,
   setFeedback,
   addToWishlist,
+  removeFromWishlist
 })(ProductCard);

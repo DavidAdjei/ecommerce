@@ -185,6 +185,29 @@ exports.editUser = async (req, res) => {
     }
 }
 
+exports.addAddress = async (req, res) => {
+    try {
+        const { city, region, street, houseNumber, ghanaPost } = req.body;
+        const { id } = req.params;
+        if (!city || !city === '' || !region || !region === '' || !street || !street === '' || !houseNumber || !houseNumber === '' || !ghanaPost || !ghanaPost === '') {
+            return res.status(401).json({ error: "All fields are required for accurate location" });
+        }
+        const user = await User.findOneAndUpdate({ _id: id }, {
+            address: {
+                city, region, street, houseNumber, ghanaPost
+            }
+        }, { new: true });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        return res.json({ message: "Address added", user });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({error: err.message});
+    }
+}
+
 exports.editImage = async (req, res) => {
     try {
         const { file } = req;

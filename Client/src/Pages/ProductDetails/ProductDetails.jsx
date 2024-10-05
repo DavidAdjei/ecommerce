@@ -7,7 +7,7 @@ import {
   getSelectedProduct,
   setFeedback,
 } from "../../redux/Actions/productActions";
-import Button from "@mui/material/Button";
+
 import { Rating } from "@mui/material";
 import { addToCart } from "../../redux/Actions/cartActions";
 import Loader from "../../features/Loader";

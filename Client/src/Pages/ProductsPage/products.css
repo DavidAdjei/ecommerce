@@ -38,3 +38,8 @@
   margin-left: -105rem;
   margin-top: 30px;
 }
+.MuiPagination-root {
+  button {
+    background-color: #f5a022 !important;
+  }
+}

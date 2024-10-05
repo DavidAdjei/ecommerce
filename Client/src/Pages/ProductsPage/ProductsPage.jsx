@@ -140,7 +140,7 @@ const ProductsPage = ({
           count={totalPages}
           page={page}
           onChange={handlePageChange}
-          color="#f5a022"
+          color="primary"
           className="pagination"
         />
       )}

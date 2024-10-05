@@ -91,6 +91,22 @@ export const editUser = (credentials, userId) => {
     }
 }
 
+export const addAddress = (credentials, userId) => {
+    return async (dispatch) => {
+        try {
+            const response = await axios.put(`${process.env.REACT_APP_SERVER}/auth/addAddress/${userId}`, credentials);
+            if (!response.data.error) {
+                dispatch(setUser(response.data.user));
+                return Promise.resolve(response.data);
+            } else {
+                return Promise.reject(response.data.error);
+            } 
+        } catch (err) {
+            return Promise.reject(err.response?.data.error || err.message);
+        }
+    }
+}
+
 
 
 export const checkAuth = () => {

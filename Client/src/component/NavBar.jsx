@@ -39,16 +39,16 @@ function NavBar({ isAuth }) {
               <img src={Logo} alt="Logo" />
             </Link>
           </h1>
-          <Link to="/" activeClassName="active">
+          <Link to="/">
             Home
           </Link>
-          <Link to="/shop" activeClassName="active">
+          <Link to="/shop">
             Shop
           </Link>
-          <Link to="/about" activeClassName="active">
+          <Link to="/about">
             About
           </Link>
-          <Link to="/contact" activeClassName="active">
+          <Link to="/contact">
             Contact
           </Link>
         </div>

@@ -13,14 +13,12 @@
   background-color: #ffffff;
 }
 
-/* .main {
+.main {
   display: flex;
-  width: 50%;
   min-height: calc(100vh - 5rem);
   height: 100%;
   overflow-x: hidden;
-  background-color: aqua;
-} */
+}
 
 body {
   font-family: "Roboto", sans-serif;

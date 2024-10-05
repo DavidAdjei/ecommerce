@@ -78,7 +78,7 @@ const App = ({
       {feedback && (
         <Feedback data={feedback} onClose={() => setFeedback(null)} />
       )}
-      <div>
+      <div className="main">
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" exact element={<Homepage />} />

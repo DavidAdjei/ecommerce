@@ -61,7 +61,6 @@ const Homepage = ({ verifyPayment, setFeedback }) => {
           <h4>24/7 Customer Support</h4>
           <p>Payments are secured</p>
         </div>
-
         <div className="support-card">
           <GrRotateLeft size={30} style={{ marginBottom: "10" }} />
           <h4>Free Returns</h4>

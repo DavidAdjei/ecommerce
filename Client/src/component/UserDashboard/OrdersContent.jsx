@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import {
   Table,
@@ -11,6 +11,7 @@ import {
   Paper,
   Typography,
   Box,
+  TablePagination
 } from '@mui/material';
 
 const getStatusStyles = (status) => {
@@ -36,8 +37,31 @@ const getPaymentStyles = (payment) => {
 };
 
 const OrdersContent = ({ orders }) => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Calculate the orders to display based on current page and rows per page
+  const displayedOrders = orders.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
   return (
     <Box sx={{ padding: 2 }}>
+      <TablePagination
+        component="div"
+        count={orders.length}
+        page={page}
+        onPageChange={handlePageChange}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleRowsPerPageChange}
+      />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -50,8 +74,8 @@ const OrdersContent = ({ orders }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order, index) => (
-              <TableRow key={index}>
+            {displayedOrders.map((order) => (
+              <TableRow key={order._id}>
                 <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                 <TableCell>GH&#8373;{order.totalPrice.toFixed(2)}</TableCell>
                 <TableCell>
@@ -69,8 +93,8 @@ const OrdersContent = ({ orders }) => {
                 </TableCell>
                 <TableCell>
                   <Box>
-                    {order.orderItems.map((item, i) => (
-                      <Typography key={i} variant="body2" style={{ textTransform: 'capitalize' }}>
+                    {order.orderItems.map((item) => (
+                      <Typography key={item._id} variant="body2" style={{ textTransform: 'capitalize' }}>
                         {item.title}
                       </Typography>
                     ))}

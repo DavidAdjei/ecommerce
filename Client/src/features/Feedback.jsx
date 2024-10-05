@@ -29,6 +29,7 @@ export default function Feedback({ data, onClose }) {
         open={open}
         autoHideDuration={2000}
         onClose={handleClose}
+        sx={{zIndex: 200000}}
       >
         <Alert onClose={handleClose} severity={severity} variant='filled'>
             {data.error || data.message}

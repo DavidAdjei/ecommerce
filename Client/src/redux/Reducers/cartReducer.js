@@ -1,4 +1,4 @@
-import { ADD_TO_CART, DECREMENT, INCREMENT, REMOVE_FROM_CART } from "../constants";
+import { ADD_TO_CART, DECREMENT, EMPTY_CART, INCREMENT, REMOVE_FROM_CART } from "../constants";
 
 const initialStae = {
     cart: {}
@@ -45,6 +45,11 @@ const cartReducer = (state = initialStae, action) => {
             return {
                 ...state,
                 cart: remainingItems
+            }
+        case EMPTY_CART: 
+            return {
+                ...state,
+                cart: {}
             }
         default:
             return state;

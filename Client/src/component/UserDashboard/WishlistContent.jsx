@@ -1,52 +1,56 @@
 import PropTypes from 'prop-types'
- import React, { useState } from 'react';
-import { Box, Card, CardMedia, CardContent, Typography, Button, Grid } from '@mui/material';
+ import React, { useEffect, useState } from 'react';
+import { Box, Card, CardMedia, CardContent, Typography, Button, Grid2 } from '@mui/material';
 import { Delete, ShoppingCart } from '@mui/icons-material';
 import { connect } from 'react-redux';
-const image1 = require("../../assets/images/iPhone-15-release-date-expectations-your-guide-to-potential-specs-features-and-pricing.jpg");
-const image2 = require("../../assets/images/PlayStation-5.jpg");
-const image3 = require("../../assets/images/iPhone-15-release-date-expectations-your-guide-to-potential-specs-features-and-pricing.jpg");
+import { getWishlist, removeFromWishlist } from '../../redux/Actions/authActions';
+import { addToCart } from '../../redux/Actions/cartActions';
+import { setFeedback } from '../../redux/Actions/productActions';
+import Loader from '../../features/Loader';
 
-const WishlistContent = () => {
+const WishlistContent = ({user, wishList, getWishlist, removeFromWishlist, addToCart, setFeedback}) => {
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+    getWishlist(user._id)
+      .catch((error) => setFeedback(error))
+      .finally(() => setLoading(false)); 
+  }, [getWishlist, user, setFeedback]);
 
-  const [wishlist, setWishlist] = useState([
-    { id: 1, name: 'Product 1', price: 100, image: image1 },
-    { id: 2, name: 'Product 2', price: 200, image: image2 },
-    { id: 3, name: 'Product 3', price: 300, image: image3 },
-  ]);
-
-  const removeFromWishlist = (productId) => {
-    setWishlist(wishlist.filter(item => item.id !== productId));
+  const handleRemove = (productId) => {
+    removeFromWishlist(user._id, productId)
+      .then((res) => setFeedback(res))
+      .catch((error) => setFeedback({ error }))
   };
 
-  const moveToCart = (productId) => {
-    removeFromWishlist(productId);
-    alert(`Moved product ${productId} to cart`);
+  const moveToCart = (product) => {
+    addToCart(product);
   };
 
   return (
     <Box sx={{ padding: 2 }}>
-      {wishlist.length === 0 ? (
+      {wishList.length < 1  || !wishList ? (
         <Typography>Your wishlist is empty!</Typography>
       ) : (
-        <Grid container spacing={3}>
-          {wishlist.map(item => (
-            <Grid item xs={12} sm={6} md={4} key={item.id}>
+        <Grid2 container spacing={3} >
+          {wishList.map(item => (
+            <Grid2 className="wishlist_item" item="true" xs={12} sm={6} md={4} key={item.id}>
               <Card sx={{ maxWidth: 345 }}>
                 <CardMedia
                   component="img"
                   height="200"
-                  image={item.image}
-                  alt={item.name}
+                  image={item.imgs[0]}
+                  alt={item.title}
+                  sx={{objectFit: "contain"}}
                 />
                 <CardContent>
-                  <Typography variant="h6" component="div">{item.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">Price: ${item.price}</Typography>
+                  <Typography variant="h6" component="div">{item.title}</Typography>
+                  <Typography variant="body2" color="text.secondary">Price: GH&#8373;{item.price}</Typography>
                   <Button
                     variant="outlined"
                     color="secondary"
                     startIcon={<Delete />}
-                    onClick={() => removeFromWishlist(item.id)}
+                    onClick={() => handleRemove(item._id)}
                     sx={{ marginRight: 1, marginTop: 1 }}
                   >
                     Remove
@@ -55,25 +59,33 @@ const WishlistContent = () => {
                     variant="contained"
                     color="primary"
                     startIcon={<ShoppingCart />}
-                    onClick={() => moveToCart(item.id)}
+                    onClick={() => moveToCart(item)}
                     sx={{ marginTop: 1 }}
                   >
                     Move to Cart
                   </Button>
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
+      {loading && <Loader />}
     </Box>
   );
 };
 
 WishlistContent.propTypes = {
+  getWishlist: PropTypes.func.isRequired,
+  addToCart: PropTypes.func.isRequired,
+  removeFromWishlist: PropTypes.func.isRequired,
+  setFeedback: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+  wishList: state.auth.wishList,
+  user: state.auth.user
+})
 
 
-export default connect(mapStateToProps, {})(WishlistContent)
+export default connect(mapStateToProps, {getWishlist, removeFromWishlist, addToCart, setFeedback})(WishlistContent)

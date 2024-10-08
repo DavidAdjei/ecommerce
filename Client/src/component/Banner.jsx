@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import "./component.css";
 const BannerImage = require("../assets/images/iPhone-15-release-date-expectations-your-guide-to-potential-specs-features-and-pricing.jpg");
 const BannerImage2 = require("../assets/images/PlayStation-5.jpg");
-const BannerImage3 = require("../assets/images/iPhone-15-release-date-expectations-your-guide-to-potential-specs-features-and-pricing.jpg");
+const BannerImage3 = require("../assets/images/pexels-n-voitkevich-6214371.jpg");
 
 const Banner = () => {
   const settings = {

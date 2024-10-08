@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import "./ProductDetails.css";
 import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
@@ -7,20 +7,53 @@ import {
   getSelectedProduct,
   setFeedback,
 } from "../../redux/Actions/productActions";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../../redux/Actions/authActions";
 
 import { Rating } from "@mui/material";
 import { addToCart } from "../../redux/Actions/cartActions";
 import Loader from "../../features/Loader";
 import { IoCartOutline } from "react-icons/io5";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const ProductDetails = ({
   getSelectedProduct,
   selectedProduct,
   addToCart,
   setFeedback,
+  addToWishlist,
+  user,
+  wishList,
+  removeFromWishlist,
+  product,
 }) => {
   const { id } = useParams();
+
+  const isInWishlist = useMemo(() => {
+    return user && wishList && wishList.some((p) => p._id === product._id);
+  }, [user, product, wishList]);
+
+  const handleAddToWish = () => {
+    if (!user) {
+      setFeedback({ error: "You need to login first" });
+    } else {
+      addToWishlist(user._id, product._id)
+        .then((res) => setFeedback(res))
+        .catch((error) => setFeedback({ error }));
+    }
+  };
+
+  const handleRemove = () => {
+    if (!user) {
+      setFeedback({ error: "You need to login first" });
+    } else {
+      removeFromWishlist(user._id, product._id)
+        .then((res) => setFeedback(res))
+        .catch((error) => setFeedback({ error }));
+    }
+  };
 
   useEffect(() => {
     fetchProduct();
@@ -47,9 +80,7 @@ const ProductDetails = ({
           size="large"
           precision={0.1}
         />
-        <button>
-          <FaHeart size={20} style={{ marginRight: "8" }} />
-        </button>
+
         <button
           className="addToCartButton"
           onClick={() => {
@@ -67,21 +98,23 @@ const ProductDetails = ({
             <li key={index}>{spec}</li>
           ))}
         </ul>
-        {/* <h3>Reviews</h3>
-        {selectedProduct?.reviews.map((review, index) => (
-          <div key={index}>
-            <h4 style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-              {review.title}{" "}
-              <Rating
-                size="small"
-                value={review.rating}
-                readOnly
-                precision={0.1}
+
+        {user && (
+          <button
+            className="addToWishlistButton"
+            onClick={!isInWishlist ? handleAddToWish : handleRemove}
+          >
+            {isInWishlist ? (
+              <FaHeart size={20} style={{ marginRight: "8px" }} color="red" />
+            ) : (
+              <FaRegHeart
+                size={20}
+                style={{ marginRight: "8px" }}
+                color="red"
               />
-            </h4>
-            <p>{review.content}</p>
-          </div>
-        ))} */}
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -102,4 +135,6 @@ export default connect(mapStateToProps, {
   getSelectedProduct,
   addToCart,
   setFeedback,
+  addToWishlist,
+  removeFromWishlist,
 })(ProductDetails);

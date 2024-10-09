@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import "./component.css";
 import Logo from "../assets/images/Logo.jpeg";
 import { IoPersonOutline } from "react-icons/io5";
@@ -35,22 +35,22 @@ function NavBar({ isAuth }) {
       <nav className="nav">
         <div className="left">
           <h1 className="nav_welcome">
-            <Link to="/" className="nav_logo">
+            <NavLink activeClassName="active" to="/" className="nav_logo">
               <img src={Logo} alt="Logo" />
-            </Link>
+            </NavLink>
           </h1>
-          <Link to="/">
+          <NavLink activeClassName="active" to="/">
             Home
-          </Link>
-          <Link to="/shop">
+          </NavLink>
+          <NavLink activeClassName="active" to="/shop">
             Shop
-          </Link>
-          <Link to="/about">
+          </NavLink>
+          <NavLink activeClassName="active" to="/about">
             About
-          </Link>
-          <Link to="/contact">
+          </NavLink>
+          <NavLink activeClassName="active" to="/contact">
             Contact
-          </Link>
+          </NavLink>
         </div>
 
         <div className="right">

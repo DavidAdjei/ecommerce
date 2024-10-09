@@ -137,6 +137,13 @@
   font-weight: 500;
   color: rgb(48, 47, 47);
 }
+
+.active {
+  padding-bottom: 0.25rem;
+  border-bottom: 4px solid #f5a022 !important;
+  background-color: transparent !important;
+  border-left: 0px !important;
+}
 .left {
   display: flex;
   gap: 3rem;

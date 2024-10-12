@@ -1,4 +1,5 @@
 const User = require("../db/user");
+const Notifications = require("../db/notifications");
 const jwt = require("jsonwebtoken");
 const { hashPassword, comparePassword, getGoogleUser } = require("../helpers/auth");
 const { googleoauth } = require("../helpers/auth");
@@ -46,6 +47,11 @@ exports.signUp = async (req, res) => {
                     if (!user) {
                         return res.status(401).json({ error: "Couldn't create user, try again later" });
                     }
+                    await new Notifications({
+                        userId: user._id,
+                        type: "Welcome Message",
+                        content: `Welcome ${user.firstName}, this is just a test project, be sure not to make actual transactions`
+                    }).save();
                     return res.json({
                         message: "SignUp Successful"
                     })
@@ -114,10 +120,7 @@ exports.loginWithGoogle = async (req, res) => {
             email: googleUser.email,
             firstName: googleUser.given_name,
             lastName: googleUser.family_name,
-            verified: googleUser.email_verified,
-            image: {
-                url: googleUser.picture
-            }
+            verified: googleUser.email_verified
         },
             {
                 upsert: true,
@@ -239,5 +242,18 @@ exports.logout = async (req, res) => {
     } catch (err) {
         console.log(err);
         return res.status(500).json({ error: `Logout failed ${err.message}` });
+    }
+}
+
+exports.getNotifications = async (req, res) => {
+    try{
+        const {userId} = req.params;
+        const notifications = await Notifications.find({userId});
+        if(!notifications){
+            return res.json({notifications: []})
+        }
+        return res.status(200).json({notifications});
+    }catch(err){
+        return res.status(500).json({error: err.message});
     }
 }

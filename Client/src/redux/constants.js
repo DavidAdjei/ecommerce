@@ -14,3 +14,4 @@ export const SET_AUTH = "SET_AUTH";
 export const SET_FEEDBACK = "SET_FEEDBACK";
 export const SET_ORDERS = "SET_ORDERS";
 export const SET_WISHLIST = "SET_WISHLIST";
+export const SET_NOTIFICATIONS = "SET_NOTIFICATIONS";

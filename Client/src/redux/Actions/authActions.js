@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SET_AUTH, SET_ORDERS, SET_USER, SET_WISHLIST } from "../constants";
+import { SET_AUTH, SET_NOTIFICATIONS, SET_ORDERS, SET_USER, SET_WISHLIST } from "../constants";
 
 axios.defaults.withCredentials = true;
 
@@ -21,6 +21,11 @@ export const setOrders = (orders) => ({
 export const setWishlist = (wishlist) => ({
     type: SET_WISHLIST,
     payload: wishlist
+});
+
+export const setNotification = (notifications) => ({
+    type: SET_NOTIFICATIONS,
+    payload: notifications
 })
 
 export const signUp = (credentials) => {
@@ -200,6 +205,23 @@ export const removeFromWishlist = (userId, productId) => {
                 return Promise.resolve(response.data)
             } else {
                 return Promise.reject(response.data.error)
+            } 
+        } catch (err) {
+            return Promise.reject(err.response?.data.error || err.message);
+        }
+    }
+}
+
+export const getNotifications = (userId) => {
+    return async (dispatch) => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_SERVER}/auth/notifications/${userId}`);
+            if (!response.data.error) {
+                dispatch(setNotification(response.data.notifications));
+                console.log(response.data.notifications);
+                return Promise.resolve(response.data)
+            } else {
+                return Promise.reject(response?.data?.error)
             } 
         } catch (err) {
             return Promise.reject(err.response?.data.error || err.message);

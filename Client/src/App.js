@@ -12,7 +12,7 @@ import {
   setFeaturedProducts,
   setFeedback,
 } from "./redux/Actions/productActions";
-import { checkAuth } from "./redux/Actions/authActions";
+import { checkAuth, getNotifications } from "./redux/Actions/authActions";
 import Protected from "./features/Protected";
 
 const Homepage = lazy(() => import("./Pages/HomePage/Homepage"));
@@ -36,6 +36,7 @@ const App = ({
   setFeedback,
   feedback,
   cart,
+  getNotifications
 }) => {
   const [loading, setLoading] = useState(true);
 
@@ -46,20 +47,14 @@ const App = ({
           (product) => product.popular === true
         );
         setFeaturedProducts(popular);
-        checkAuth()
-          .then(() => {
-            setLoading(false);
-          })
-          .catch((err) => {
-            setFeedback({ error: err });
-            setLoading(false);
-          });
       })
       .catch((err) => {
         setFeedback({ error: err });
+      }).finally(()=> {
         checkAuth()
-          .then(() => {
+          .then((res) => {
             setLoading(false);
+            getNotifications(res.user._id).catch(error => setFeedback({error}));
           })
           .catch((err) => {
             setFeedback({ error: err });
@@ -130,6 +125,7 @@ const App = ({
 
 App.propTypes = {
   getProducts: PropTypes.func,
+  getNotifications: PropTypes.func,
   setFeaturedProducts: PropTypes.func,
   setFeedback: PropTypes.func,
   feedback: PropTypes.object,
@@ -145,4 +141,5 @@ export default connect(mapStateToProps, {
   setFeaturedProducts,
   checkAuth,
   setFeedback,
+  getNotifications
 })(App);

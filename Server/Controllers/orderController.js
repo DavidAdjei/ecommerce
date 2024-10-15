@@ -2,6 +2,7 @@ const User = require('../db/user');
 const Order = require('../db/orders');
 const https = require('https');
 const { default: axios } = require('axios');
+const Notifications = require('../db/notifications');
 
 
 const calculateTot = (order) => {
@@ -36,16 +37,19 @@ exports.postOrder = async (req, res) => {
             orderItem ={}
         })
 
-        console.log({orderArray})
-
         const newOrder = new Order({
             userId,
             orderItems: orderArray,
             totalPrice: calculateTot(order),
-            deliveryAddress: "Asofan Melon Street 41"
+            deliveryAddress: `City = ${user.address.city}, Street = ${user.address.street}, House Number = ${user.address.houseNumber}, Region = ${user.address.region}, GPS = ${user.address.ghanaPost},`
         })
 
         const savedOrder = await newOrder.save();
+        new Notifications({
+            userId,
+            type: "Order Received",
+            content: `Your order of amount, GH₵ ${calculateTot(order)} has been received, you would receive notifications when the order status changes`
+        }).save();
         const params = JSON.stringify({
             "email": user.email,
             "amount": savedOrder.totalPrice * 100,
@@ -119,6 +123,11 @@ exports.verifyOrderPayment = async (req, res) => {
                 existingOrder.payment = "Paid";
                 await user.save();
                 await existingOrder.save();
+                await new Notifications({
+                    userId: user._id,
+                    type: "Payment Received",
+                    content: `Hello ${user.firstName}, your payment was successful. Thank you for purchasing from us`
+                }).save();
 
                 return res.status(200).json({ message: 'Payment received' });
             } catch (error) {

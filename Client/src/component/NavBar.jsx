@@ -8,6 +8,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import { IoCartOutline } from "react-icons/io5";
 import { IoIosSearch } from "react-icons/io";
 import Button from "@mui/material/Button";
+import Notifications from "./Notifications";
 
 function NavBar({ isAuth }) {
   const [keyword, setKeyword] = useState("");
@@ -71,9 +72,12 @@ function NavBar({ isAuth }) {
               Login
             </Button>
           ) : (
-            <Link to="/profile">
-              <IoPersonOutline size={30} />
-            </Link>
+            <div style={{display: "flex", gap: "1rem"}}>            
+              <Link to="/profile">
+                <IoPersonOutline size={30} />
+              </Link>
+              <Notifications/>
+            </div>
           )}
           <Link to="/cart">
             <IoCartOutline size={30} />

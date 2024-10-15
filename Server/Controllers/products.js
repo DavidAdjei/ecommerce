@@ -1,6 +1,4 @@
 const Product = require("../db/Products");
-const cloudinary = require('cloudinary').v2;
-const { upload } = require('../helpers/products');
 
 exports.addProducts = async (req, res) => {
   try {

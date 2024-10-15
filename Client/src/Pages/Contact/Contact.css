@@ -2,13 +2,20 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: -20rem;
+}
+.container {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  width: 100%;
   margin: auto;
 }
 .contact-form {
+  position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -95,6 +102,7 @@
   transition: transform 0.2s;
   background-color: #f5a022;
   margin: 30px;
+  margin-left: -250px;
 }
 
 .contact-form button:hover {

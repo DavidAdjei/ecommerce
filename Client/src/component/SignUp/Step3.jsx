@@ -50,40 +50,48 @@ function Step3({ setUserData, signUp, setFeedback, userData, step, role, user, s
     return (
         <Container maxWidth="sm">
             <Box mt={5}>
-                <Typography variant="h5" textAlign="center" gutterBottom>
-                    Payment Details
-                </Typography>
+                {role === "seller" && (
+                    <Typography variant="h5" textAlign="center" gutterBottom>
+                        Payment Details
+                    </Typography>
+                )}
                 <Grid2 container spacing={2}>
-                    <Grid2 item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Provider"
-                            name="provider"
-                            onChange={handleChange}
-                            variant="outlined"
-                        />
-                    </Grid2>
-                    <Grid2 item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Account Number"
-                            name="accountNumber"
-                            onChange={handleChange}
-                            variant="outlined"
-                        />
-                    </Grid2>
-                    <Grid2 item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Expiry Date"
-                            name="expiryDate"
-                            type="date"
-                            onChange={handleChange}
-                            variant="outlined"
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid2>
-                    <Grid2 item xs={12}>
+                    {
+                        role === "seller" && (
+                            <>
+                                <Grid2 item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Provider"
+                                        name="provider"
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                    />
+                                </Grid2>
+                                <Grid2 item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Account Number"
+                                        name="accountNumber"
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                    />
+                                </Grid2>
+                                <Grid2 item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Expiry Date"
+                                        name="expiryDate"
+                                        type="date"
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                        InputLabelProps={{ shrink: true }}
+                                    />
+                                </Grid2>
+                            </>
+                        )
+                    }
+                    <Grid2 item xs={12} sm={12}>
                         <Typography variant="h6">Billing Address</Typography>
                     </Grid2>
                     <Grid2 item xs={12} sm={6}>

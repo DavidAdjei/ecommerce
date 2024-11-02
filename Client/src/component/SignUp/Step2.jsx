@@ -20,7 +20,6 @@ function Step2({ role, setUserData, nextStep, setFeedback, signUp, step, setLoad
     };
 
     const handleSubmit = () => {
-        console.log({role});
         setLoading(true);
         setUserData(form);
         if (!form.firstName || !form.lastName || !form.email || !form.password || !form.confirmPassword) {
@@ -30,6 +29,7 @@ function Step2({ role, setUserData, nextStep, setFeedback, signUp, step, setLoad
         } else {
             if (form.password!== form.confirmPassword) {
                 setFeedback({error: 'Passwords do not match'});
+                setLoading(false);
                 return;
             }
             signUp(step, role, form)
@@ -39,8 +39,7 @@ function Step2({ role, setUserData, nextStep, setFeedback, signUp, step, setLoad
                 }
             ).catch(err=>{ 
                 setFeedback({ error: err });  
-                setLoading(false)
-            });
+            }).finally(()=> setLoading(false));
         }
     };
 

@@ -5,12 +5,6 @@ import { connect } from "react-redux";
 
 const PublicRoute = ({ isAuth, user }) => {
     const location = useLocation();
-    if (isAuth && user.role === "seller" && user.registrationStep === 0) {
-        return <Navigate to="/" />;
-    }
-  if (isAuth) {
-    return <Navigate to="/" />;
-  }
   return <Outlet />;
 };
 

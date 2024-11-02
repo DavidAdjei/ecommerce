@@ -50,7 +50,7 @@ exports.signUp = async (req, res) => {
         else if (step === 3) { 
             const { user, paymentInfo } = credentials;
             const _id = user._id;
-            if (!_id || !paymentInfo.provider || !paymentInfo.accountNumber) {
+            if (!_id || (user.role === "seller" && (!paymentInfo.provider || !paymentInfo.accountNumber))) {
                 return res.status(400).json({ error: "All fields are required in step 3" });
             }
 

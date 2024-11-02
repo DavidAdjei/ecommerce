@@ -35,7 +35,7 @@ function SignUp() {
                 <>
                     {step === 1 && <Step1 setRole={setRole} nextStep={nextStep} />}
                     {step === 2 && <Step2 role={role} setUserData={setUserData} nextStep={nextStep} step={step} />}
-                    {step === 3 && role === "seller" && (
+                    {step === 3 && (
                         <Step3 setUserData={setUserData} userData={userData} step={step} role={role} />
                     )}
                 </>

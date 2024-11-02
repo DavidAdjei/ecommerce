@@ -1,4 +1,4 @@
-import { SET_AUTH, SET_NOTIFICATIONS, SET_ORDERS, SET_USER, SET_WISHLIST } from "../constants";
+import { SET_AUTH, SET_LOADING, SET_NOTIFICATIONS, SET_ORDERS, SET_USER, SET_WISHLIST } from "../constants";
 
 const initialState = {
     user: null,
@@ -6,6 +6,7 @@ const initialState = {
     orders: [],
     wishList: [],
     notifications: [],
+    loading: true
 };
 
 const authReducer = (state = initialState, action) => {
@@ -34,6 +35,11 @@ const authReducer = (state = initialState, action) => {
             return{
                 ...state,
                 notifications: action.payload
+            }
+        case SET_LOADING:
+            return {
+                ...state,
+                loading: action.payload
             }
         default:
             return state;

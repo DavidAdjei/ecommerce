@@ -7,6 +7,7 @@ const orderRoutes = require("./Routes/order");
 const productRoutes = require("./Routes/products");
 const categoryRoutes = require("./Routes/categories");
 const wishlistRoutes = require("./Routes/wishlist");
+const sellerRoutes = require("./Routes/seller");
 const cors = require('cors');
 const morgan = require("morgan");
 
@@ -38,7 +39,8 @@ app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/order', orderRoutes);
-app.use("/wishlist", wishlistRoutes)
+app.use("/wishlist", wishlistRoutes);
+app.use("/seller", sellerRoutes);
 
 const port = process.env.PORT || 8000;
 

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { hashPassword, comparePassword, getGoogleUser } = require("../helpers/auth");
 const { googleoauth } = require("../helpers/auth");
 const { uploadSingleImage } = require("../helpers/upload");
+const axios = require("axios");
 
 const cookieOptions = {
     httpOnly: true,
@@ -13,59 +14,90 @@ const cookieOptions = {
 }
 
 exports.signUp = async (req, res) => {
-    try {
-        const { firstName, lastName, email, password } = req.body;
-        if (!firstName) {
-            return res.status(403).json({
-                error: "First Name is required"
-            })
-        } else if (!lastName) {
-            return res.status(403).json({
-                error: "Last Name is required"
-            })
-        } else if (!email) {
-            return res.status(403).json({
-                error: "Email is required"
-            })
-        } else if (!password || password.length < 8) {
-            return res.status(403).json({
-                error: "Password is required and should be more than 8 characters"
-            })
-        } else {
-            const exist = await User.findOne({ email });
-            if (exist) {
-                return res.status(409).json({
-                    error: "Email is taken"
-                })
-            } else {
-                const hashedPassword = await hashPassword(password);
-                try {
-                    const user = await new User({
-                        firstName, lastName, email, password: hashedPassword,
-                    }).save();
+    const { step, role, credentials} = req.body;
 
-                    if (!user) {
-                        return res.status(401).json({ error: "Couldn't create user, try again later" });
-                    }
-                    await new Notifications({
-                        userId: user._id,
-                        type: "Welcome Message",
-                        content: `Welcome ${user.firstName}, this is just a test project, be sure not to make actual transactions`
-                    }).save();
-                    return res.json({
-                        message: "SignUp Successful"
-                    })
+    try {
+        if (step === 2) {
+            const {firstName, lastName, email, password, dateOfBirth } = credentials;
+            if (!role.toLowerCase() || !["buyer", "seller"].includes(role)) {
+                return res.status(400).json({ error: "Invalid role selection" });
+            }
+            if ( !firstName || !lastName || !email || !password) {
+                return res.status(400).json({ error: "Apart from date of birth, all fields are required" });
+            }
+
+            const exists = await User.findOne({email});
+            if(exists){
+                return res.status(409).json({error: "User already exists"});
+            }
+            const hashedPassword = await hashPassword(password);
+
+            const  user = await new User({
+                firstName, 
+                lastName,
+                email,
+                password: hashedPassword,
+                dateOfBirth: dateOfBirth || undefined,
+                role,
+                registrationStep: 3
+            }).save();
+
+            res.status(201).json({
+                message: "Basic information saved",
+                user
+            });
+        }
+        else if (step === 3) { 
+            const { user, paymentInfo } = credentials;
+            const _id = user._id;
+            if (!_id || !paymentInfo.provider || !paymentInfo.accountNumber) {
+                return res.status(400).json({ error: "All fields are required in step 3" });
+            }
+
+            const existingUser = await User.findById(_id);
+            if (!existingUser || existingUser.registrationStep !== 3) {
+                return res.status(400).json({ error: "Invalid step sequence" });
+            }
+
+            if(role === "seller"){
+                try {
+                    const paystackResponse = await axios.post("https://api.paystack.co/subaccount", {
+                        business_name: `${existingUser.firstName} ${existingUser.lastName}`,
+                        account_number: paymentInfo.accountNumber,
+                        bank_code: paymentInfo.provider,
+                        percentage_charge: 10
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`
+                        }
+                    });
+                    existingUser.paystackSecret = paystackResponse.data.data.subaccount_code;
                 } catch (error) {
-                    console.log(error)
-                    res.status(500).json({error: error.message})
+                    console.error("Paystack error:", error);
+                    return res.status(500).json({ error: "Failed to create Paystack subaccount" });
                 }
             }
+            
+
+            existingUser.paymentMethods.push({
+                provider: paymentInfo.provider, 
+                accountNumber: paymentInfo.accountNumber,
+                expiryDate: paymentInfo.expiryDate || undefined
+            });
+            existingUser.address = paymentInfo.billingAddress;
+            existingUser.registrationStep = 0; 
+            await existingUser.save();
+            res.status(201).json({ message: "Seller registration complete", nextStep: null });
         }
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: err.message });
+
+        else {
+            return res.status(400).json({ error: "Invalid step or request data" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred during registration" });
     }
-}
+};
 
 exports.signin = async (req, res) => {
     try {
@@ -159,7 +191,7 @@ exports.isAuth = async (req, res) => {
 
         const user = await User.findById(decoded._id);
         if (!user) {
-            return res.json(404).json({
+            return res.status(404).json({
                 error: "User not found"
             })
         }
@@ -215,7 +247,6 @@ exports.editImage = async (req, res) => {
     try {
         const { file } = req;
         const { id } = req.params;
-        console.log(file);
         if (!file) {
             return res.status(401).json({ error: 'No file uploaded' });
         }

@@ -37,7 +37,7 @@ const CheckoutPage = ({setFeedback, user, cart, placeOrder, addAddress}) => {
         } else {
             placeOrder(user._id, cart).then((res) => {
                 setLoading(false);
-                window.location.href = res?.data?.authorization_url;
+                window.location.href = res.paymentUrl;
             }).catch(err => { setFeedback({ error: err });  setLoading(false);});
         } 
     }

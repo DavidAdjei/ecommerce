@@ -45,6 +45,11 @@ const ProductSchema = new Schema({
         type: String,
         ref: 'Categories'
     },
+    sellerId: {
+        type: Schema.Types.ObjectId, 
+        ref: 'User',
+        required: true
+    },
     DisplaySize: {
         type: Number
     },

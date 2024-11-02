@@ -10,7 +10,7 @@ import { IoIosSearch } from "react-icons/io";
 import Button from "@mui/material/Button";
 import Notifications from "./Notifications";
 
-function NavBar({ isAuth }) {
+function NavBar({ isAuth, user }) {
   const [keyword, setKeyword] = useState("");
   const [query, setQuery] = useState(new URLSearchParams());
   const location = useLocation();
@@ -43,9 +43,19 @@ function NavBar({ isAuth }) {
           <NavLink activeClassName="active" to="/">
             Home
           </NavLink>
-          <NavLink activeClassName="active" to="/shop">
-            Shop
-          </NavLink>
+
+          {
+            !isAuth && (
+              <NavLink activeClassName="active" to="/shop">
+                Shop
+              </NavLink>
+            )
+          }
+          {isAuth && user.role !== "seller" && (
+            <NavLink activeClassName="active" to="/shop">
+              Shop
+            </NavLink>
+          )}
           <NavLink activeClassName="active" to="/about">
             About
           </NavLink>
@@ -55,33 +65,70 @@ function NavBar({ isAuth }) {
         </div>
 
         <div className="right">
-          <input
-            onChange={handleSearchChange}
-            value={keyword}
-            className="search_input"
-            type="text"
-            placeholder="Search products and brands..."
-            autoCorrect="false"
-            autoComplete="false"
-          />
-          <Link to={`/shop?${query.toString()}`}>
-            <IoIosSearch size={30} className="search_button" />
-          </Link>
-          {!isAuth ? (
-            <Button variant="outlined" color="secondary" onClick={handleLogin}>
-              Login
-            </Button>
-          ) : (
-            <div style={{display: "flex", gap: "1rem"}}>            
-              <Link to="/profile">
-                <IoPersonOutline size={30} />
+          {/* Only show search bar for buyers */}
+          {!isAuth && (
+            <>
+              <input
+                onChange={handleSearchChange}
+                value={keyword}
+                className="search_input"
+                type="text"
+                placeholder="Search products and brands..."
+                autoCorrect="false"
+                autoComplete="false"
+              />
+              <Link to={`/shop?${query.toString()}`}>
+                <IoIosSearch size={30} className="search_button" />
               </Link>
-              <Notifications/>
+            </>
+          )}
+          {isAuth && user.role !== "seller" && (
+            <>
+              <input
+                onChange={handleSearchChange}
+                value={keyword}
+                className="search_input"
+                type="text"
+                placeholder="Search products and brands..."
+                autoCorrect="false"
+                autoComplete="false"
+              />
+              <Link to={`/shop?${query.toString()}`}>
+                <IoIosSearch size={30} className="search_button" />
+              </Link>
+            </>
+          )}
+          {!isAuth ? (
+            <>
+              <Button variant="outlined" color="secondary" onClick={handleLogin}>
+                Login
+              </Button>
+              <Link to="/cart">
+              <IoCartOutline size={30} />
+              </Link>
+            </>
+            
+          ) : (
+            <div style={{ display: "flex", gap: "1rem" }}>
+              {user.role === "buyer" && (
+                <>
+                  <Link to="/profile">
+                    <IoPersonOutline size={30} />
+                  </Link>
+                  <Notifications />
+                  <Link to="/cart">
+                    <IoCartOutline size={30} />
+                  </Link>
+                </>
+              )}
+              {user.role === "seller" && (
+                <>
+                  <Link to="/dashboard">Dashboard</Link>
+                  <Link to="/products">My Products</Link>
+                </>
+              )}
             </div>
           )}
-          <Link to="/cart">
-            <IoCartOutline size={30} />
-          </Link>
         </div>
       </nav>
     </header>
@@ -90,10 +137,15 @@ function NavBar({ isAuth }) {
 
 NavBar.propTypes = {
   isAuth: PropTypes.bool.isRequired,
+  user: PropTypes.shape({
+    role: PropTypes.string,
+  }), 
 };
+
 
 const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuth,
+  user: state.auth.user, 
 });
 
 export default connect(mapStateToProps, {})(NavBar);

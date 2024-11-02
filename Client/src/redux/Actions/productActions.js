@@ -47,10 +47,27 @@ export const getProducts = () => {
     }
 }
 
-export const getSelectedProduct = (productId) => {
+export const getSellerProducts = (sellerId) => {
     return async (dispatch) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_SERVER}/products/${productId}`);
+            const response = await axios.get(`${process.env.REACT_APP_SERVER}/seller/${sellerId}`);
+            if (!response.data.error) {
+                dispatch(setProducts(response.data.products));
+                return Promise.resolve(response.data)
+            } else {
+                return Promise.reject(response.data.error)
+            }
+        } catch (err) {
+            return Promise.reject(err.response?.data.error || err.message);
+        }
+    }
+}
+
+
+export const getSelectedProduct = (sellerId) => {
+    return async (dispatch) => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_SERVER}/products/${sellerId}`);
             if (!response.data.error) {
                 dispatch(setSelectedProduct(response.data.product));
                 return Promise.resolve(response.data)
@@ -63,6 +80,20 @@ export const getSelectedProduct = (productId) => {
     }
 }
 
+export const addProduct = (sellerId, product) => {
+    return async (dispatch) => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_SERVER}/seller/${sellerId}`, {product});
+            if (!response.data.error) {
+                return Promise.resolve(response.data)
+            } else {
+                return Promise.reject(response.data.error)
+            }
+        } catch (err) {
+            return Promise.reject(err.response?.data.error || err.message);
+        }
+    }
+}
 
 export const getCategories = () => {
     return async (dispatch) => {

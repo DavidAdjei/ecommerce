@@ -15,3 +15,5 @@ export const SET_FEEDBACK = "SET_FEEDBACK";
 export const SET_ORDERS = "SET_ORDERS";
 export const SET_WISHLIST = "SET_WISHLIST";
 export const SET_NOTIFICATIONS = "SET_NOTIFICATIONS";
+export const SET_LOADING = "SET_LOADING";
+

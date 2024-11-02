@@ -6,11 +6,26 @@ cloudinary.config({
   api_secret: process.env.API_SECRET
 });
 
+// Upload a single image
 exports.uploadSingleImage = async (file) => {
   try {
     const imageUrl = await cloudinary.uploader.upload(file.path);
     return { imageUrl: imageUrl.secure_url };
   } catch (error) {
-      throw err;
+    throw error; 
+  }
+};
+
+// Upload multiple images
+exports.uploadMultipleImages = async (files) => {
+  try {
+    const uploadPromises = files.map(async (file) => {
+      const result = await cloudinary.uploader.upload(file.path);
+      return result.secure_url;
+    });
+    const imageUrls = await Promise.all(uploadPromises);
+    return { imageUrls };
+  } catch (error) {
+    throw error;  
   }
 };

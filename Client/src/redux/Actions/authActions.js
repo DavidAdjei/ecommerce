@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SET_AUTH, SET_NOTIFICATIONS, SET_ORDERS, SET_USER, SET_WISHLIST } from "../constants";
+import { SET_AUTH, SET_LOADING, SET_NOTIFICATIONS, SET_ORDERS, SET_USER, SET_WISHLIST } from "../constants";
 
 axios.defaults.withCredentials = true;
 
@@ -28,10 +28,15 @@ export const setNotification = (notifications) => ({
     payload: notifications
 })
 
-export const signUp = (credentials) => {
+export const setLoading = (loading) => ({
+    type: SET_LOADING,
+    payload: loading
+})
+
+export const signUp = (step, role, credentials) => {
     return async () => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_SERVER}/auth/signUp`, credentials);
+            const response = await axios.post(`${process.env.REACT_APP_SERVER}/auth/signUp`, {step, role, credentials});
             if (!response.data.error) {
                 return Promise.resolve(response.data)
             } else {

@@ -78,7 +78,7 @@ SellerProducts.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-    products: state.product.products,
+    products: state.sellerProduct.products,
 });
 
 export default connect(mapStateToProps)(SellerProducts);

@@ -128,9 +128,17 @@ export const checkAuth = () => {
                 dispatch(setAuth(true));
                 return Promise.resolve(response.data)
             } else {
-                return Promise.reject(response?.data?.error)
+                if(response.data.error === "Registration Incomplete"){
+                    dispatch(setUser(response.data.user));
+                    return Promise.reject(response.data.error)
+                }
+                return Promise.reject(response?.data.error);
             } 
         } catch (err) {
+            if(err.response.data.error === "Registration Incomplete"){
+                dispatch(setUser(err.response.data.user));
+                return Promise.reject(err.response.data.error)
+            }
             return Promise.reject(err.response?.data.error || err.message);
         }
     }

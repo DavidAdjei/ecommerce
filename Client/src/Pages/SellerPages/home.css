@@ -1,0 +1,7 @@
+.seller-hero-section{
+    padding: 4;
+    background-image: url(../../assets/images/SellerHero.png);
+    color: white; 
+    height: 50vh;
+    padding: 2rem;
+}

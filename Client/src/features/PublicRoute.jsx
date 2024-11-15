@@ -1,21 +1,14 @@
 import React from "react";
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { Navigate, Outlet } from 'react-router-dom'
+import { useSelector } from "react-redux";
 
-const PublicRoute = ({ isAuth, user }) => {
-    const location = useLocation();
+const PublicRoute = () => {
+  const {isAuth} = useSelector((state) => state.auth);
+
+    if(isAuth){
+      return <Navigate to='/'/>
+    }
   return <Outlet />;
 };
 
-PublicRoute.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  registrationStep: PropTypes.number.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  isAuth: state.auth.isAuth,
-  user: state.auth.user,
-});
-
-export default connect(mapStateToProps)(PublicRoute);
+export default PublicRoute;

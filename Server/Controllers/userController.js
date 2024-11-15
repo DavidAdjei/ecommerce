@@ -1,10 +1,9 @@
 const User = require("../db/user");
 const Notifications = require("../db/notifications");
 const jwt = require("jsonwebtoken");
-const { hashPassword, comparePassword, getGoogleUser } = require("../helpers/auth");
+const { hashPassword, comparePassword, getGoogleUser, validateStep2Credentials, validateStep3Credentials, createPaystackSubaccount } = require("../helpers/auth");
 const { googleoauth } = require("../helpers/auth");
 const { uploadSingleImage } = require("../helpers/upload");
-const axios = require("axios");
 
 const cookieOptions = {
     httpOnly: true,
@@ -14,90 +13,75 @@ const cookieOptions = {
 }
 
 exports.signUp = async (req, res) => {
-    const { step, role, credentials} = req.body;
-
+    const { step, role, credentials } = req.body;
     try {
-        if (step === 2) {
-            const {firstName, lastName, email, password, dateOfBirth } = credentials;
-            if (!role.toLowerCase() || !["buyer", "seller"].includes(role)) {
-                return res.status(400).json({ error: "Invalid role selection" });
+        if (step === 1) {
+            const validationError = validateStep2Credentials(credentials, role);
+            if (validationError) {
+                return res.status(400).json({ error: validationError });
             }
-            if ( !firstName || !lastName || !email || !password) {
-                return res.status(400).json({ error: "Apart from date of birth, all fields are required" });
+            const { firstName, lastName, email, password } = credentials;
+            const exists = await User.findOne({ email });
+            if (exists) {
+                return res.status(409).json({ error: "User already exists" });
             }
 
-            const exists = await User.findOne({email});
-            if(exists){
-                return res.status(409).json({error: "User already exists"});
-            }
             const hashedPassword = await hashPassword(password);
+            const registrationStep = role === "seller" ? 2 : 0;
 
-            const  user = await new User({
-                firstName, 
+            const user = await new User({
+                firstName,
                 lastName,
                 email,
                 password: hashedPassword,
-                dateOfBirth: dateOfBirth || undefined,
                 role,
-                registrationStep: 3
+                registrationStep
             }).save();
 
-            res.status(201).json({
+            return res.status(201).json({
                 message: "Basic information saved",
                 user
             });
-        }
-        else if (step === 3) { 
+        } else if (step === 2 && role === "seller") {
             const { user, paymentInfo } = credentials;
-            const _id = user._id;
-            if (!_id || (user.role === "seller" && (!paymentInfo.provider || !paymentInfo.accountNumber))) {
-                return res.status(400).json({ error: "All fields are required in step 3" });
+
+            const validationError = validateStep3Credentials(user, paymentInfo);
+            if (validationError) {
+                return res.status(400).json({ error: validationError });
             }
 
-            const existingUser = await User.findById(_id);
-            if (!existingUser || existingUser.registrationStep !== 3) {
+            const existingUser = await User.findById(user._id);
+            if (!existingUser || existingUser.registrationStep !== 2) {
                 return res.status(400).json({ error: "Invalid step sequence" });
             }
 
-            if(role === "seller"){
-                try {
-                    const paystackResponse = await axios.post("https://api.paystack.co/subaccount", {
-                        business_name: `${existingUser.firstName} ${existingUser.lastName}`,
-                        account_number: paymentInfo.accountNumber,
-                        bank_code: paymentInfo.provider,
-                        percentage_charge: 10
-                    }, {
-                        headers: {
-                            Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`
-                        }
-                    });
-                    existingUser.paystackSecret = paystackResponse.data.data.subaccount_code;
-                } catch (error) {
-                    console.error("Paystack error:", error);
-                    return res.status(500).json({ error: "Failed to create Paystack subaccount" });
-                }
+            try {
+                const subaccountCode = await createPaystackSubaccount(existingUser, paymentInfo);
+                existingUser.paystackSecret = subaccountCode;
+            } catch (error) {
+                console.error("Paystack error:", error);
+                return res.status(500).json({ error: "Failed to create Paystack subaccount" });
             }
-            
 
             existingUser.paymentMethods.push({
-                provider: paymentInfo.provider, 
+                provider: paymentInfo.provider,
                 accountNumber: paymentInfo.accountNumber,
                 expiryDate: paymentInfo.expiryDate || undefined
             });
             existingUser.address = paymentInfo.billingAddress;
-            existingUser.registrationStep = 0; 
+            existingUser.registrationStep = 0; // Registration complete
             await existingUser.save();
-            res.status(201).json({ message: "Seller registration complete", nextStep: null });
-        }
 
-        else {
+            return res.status(201).json({ message: "Seller registration complete", nextStep: null });
+        } else {
             return res.status(400).json({ error: "Invalid step or request data" });
         }
     } catch (error) {
-        console.error(error);
+        console.error("Registration error:", error);
         res.status(500).json({ error: "An error occurred during registration" });
     }
 };
+
 
 exports.signin = async (req, res) => {
     try {
@@ -134,47 +118,53 @@ exports.signin = async (req, res) => {
 
 exports.loginWithGoogle = async (req, res) => {
     try {
-        const { code } = req.query;
+        const { code, role } = req.query; // Include role as a query parameter
+
         if (!code) {
             return res.status(400).json({ error: "Authorization code is required" });
-        } 
-        const { id_token, access_token } = await googleoauth(code);
-        if (!id_token, !access_token) {
-            return res.status(400).json({ error: "Failed to retrieve tokens from google" });
-        }
-        const googleUser = await getGoogleUser(id_token, access_token);
-        if (!googleUser) {
-            return res.status(404).json({error: "Failed to fetch user"})
         }
 
-        const user = await User.findOneAndUpdate(
-            { email: googleUser.email }, {
+        const { id_token, access_token } = await googleoauth(code);
+        if (!id_token || !access_token) {
+            return res.status(400).json({ error: "Failed to retrieve tokens from Google" });
+        }
+
+        const googleUser = await getGoogleUser(id_token, access_token);
+        if (!googleUser) {
+            return res.status(404).json({ error: "Failed to fetch user" });
+        }
+
+        let user = await User.findOne({ email: googleUser.email });
+        if (user) {
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+            res.cookie('auth_token', token, cookieOptions);
+            return res.redirect(`${process.env.CLIENT_SIDE_URL}/dashboard`);
+        }
+
+        if (!role) {
+            return res.status(400).json({ error: "User role is required for new accounts" });
+        }
+
+        user = new User({
             email: googleUser.email,
             firstName: googleUser.given_name,
             lastName: googleUser.family_name,
-            verified: googleUser.email_verified
-        },
-            {
-                upsert: true,
-                new: true
-            }
-        );
-
-        if (!user) {
-            return res.status(409).json({ error: "Error creating user" });
-        }
-
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "7d",
+            verified: googleUser.email_verified,
+            role,  
+            registrationStep: role === "seller" ? 2 : 0
         });
+        await user.save();
+
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
         res.cookie('auth_token', token, cookieOptions);
 
-        res.redirect(process.env.CLIENT_SIDE_URL);
+        res.redirect(`${process.env.CLIENT_SIDE_URL}/complete-profile`);
     } catch (err) {
-        console.log(err)
-        return res.status(500).json({ error: err.message });
+        console.error(err);
+        return res.status(500).json({ error: "An error occurred during Google login" });
     }
-}
+};
+
 
 exports.isAuth = async (req, res) => {
     try {
@@ -195,9 +185,17 @@ exports.isAuth = async (req, res) => {
                 error: "User not found"
             })
         }
+        
         user.password = undefined;
         user.secret = undefined;
         user.paystackSecret = undefined;
+        
+        if(user.registrationStep !== 0){
+            return res.status(400).json({
+                error: "Registration Incomplete",
+                user
+            })
+        }
         return res.json({ message: "Authenticated", user });
     } catch (err) {
         console.log(err);

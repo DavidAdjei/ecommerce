@@ -39,6 +39,7 @@ export const getProducts = () => {
                 dispatch(setProducts(response.data.products));
                 return Promise.resolve(response.data)
             } else {
+                dispatch(setProducts([]));
                 return Promise.reject(response.data.error)
             }
         } catch (err) {
@@ -55,6 +56,7 @@ export const getSellerProducts = (sellerId) => {
                 dispatch(setProducts(response.data.products));
                 return Promise.resolve(response.data)
             } else {
+                dispatch(setProducts([]));
                 return Promise.reject(response.data.error)
             }
         } catch (err) {

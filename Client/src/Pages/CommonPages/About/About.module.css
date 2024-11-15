@@ -1,0 +1,37 @@
+.aboutUs {
+  padding: 20px;
+  text-align: center;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.button {
+  margin: 10px;
+}
+
+.chatFeature {
+  margin-top: 40px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.title {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.teamGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.teamCard {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px;
+}

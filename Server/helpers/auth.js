@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const axios = require('axios');
 const qs = require('qs');
+const VALID_ROLES = ["buyer", "seller"];
 
 exports.hashPassword = (password) => {
     return new Promise((resolve, reject) => {
@@ -59,3 +60,49 @@ exports.getGoogleUser = async (id_token, access_token) => {
         console.log(err, "Error fethcing user");
     }
 }
+
+
+exports.createPaystackSubaccount = async (user, paymentInfo) => {
+    const PAYSTACK_URL = "https://api.paystack.co/subaccount";
+    try {
+        const response = await axios.post(
+            PAYSTACK_URL,
+            {
+                business_name: `${user.firstName} ${user.lastName}`,
+                account_number: paymentInfo.accountNumber,
+                bank_code: paymentInfo.provider,
+                percentage_charge: 10
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`
+                }
+            }
+        );
+        return response.data.data.subaccount_code;
+    } catch (error) {
+        console.error("Paystack error:", error.response?.data || error.message);
+        throw new Error("Failed to create Paystack subaccount");
+    }
+};
+
+exports.validateStep2Credentials = (credentials, role) => {
+    const { firstName, lastName, email, password } = credentials;
+    if (!role || !VALID_ROLES.includes(role)) {
+        return "Invalid role selection";
+    }
+    if (!firstName || !lastName || !email || !password) {
+        return "Apart from date of birth, all fields are required";
+    }
+    return null;
+};
+
+exports.validateStep3Credentials = (user, paymentInfo) => {
+    if (!user?._id) {
+        return "User ID is required for step 3";
+    }
+    if (user.role === "seller" && (!paymentInfo.provider || !paymentInfo.accountNumber)) {
+        return "All fields are required in step 3 for sellers";
+    }
+    return null;
+};

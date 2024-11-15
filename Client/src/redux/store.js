@@ -4,14 +4,17 @@ import storage from 'redux-persist/lib/storage';
 import expireReducer from 'redux-persist-transform-expire';
 import { thunk } from 'redux-thunk';
 import { combineReducers } from 'redux';
-import productReducer from './Reducers/productReducer';
-import cartReducer from './Reducers/cartReducer';
-import authReducer from './Reducers/authReducer';
-
+import productReducer from './Reducers/BuyerReducer/productReducer';
+import cartReducer from './Reducers/BuyerReducer/cartReducer';
+import authReducer from './Reducers/BuyerReducer/authReducer';
+import {productReducer as sellerProduct} from './Reducers/SellerReducer/products';
+import chatReducer from './Reducers/chatReducer';
 const rootReducer = combineReducers({
   product: productReducer,
   cart: cartReducer,
-  auth: authReducer
+  auth: authReducer,
+  sellerProduct,
+  chatReducer,
 });
 
 const persistConfig = {

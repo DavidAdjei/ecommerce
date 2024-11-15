@@ -8,9 +8,7 @@ const ProtectedBuyer = ({ isAuth, user }) => {
 
     if(!isAuth){
         return <Navigate to={`/login?page=${location.pathname}`} replace/>;
-    }else if(isAuth && user.registrationStep !== 0){
-        return <Navigate to={`/signUp?step=${user.registrationStep}&role=${user.role}`} replace/>;
-      }
+    }
     return user.role === "buyer" ? <Outlet/> : <Navigate to={`/`} /> 
 }
 

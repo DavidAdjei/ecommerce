@@ -1,0 +1,182 @@
+.footer {
+    background-image: url('../assets/images/FooterDesktop.png');
+    background-size: cover;
+    color: white;
+    padding: 40px 20px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        background-image: url('../assets/images/FooterMobile.png');
+    }
+}
+
+.footerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.leftSection {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 60%;
+}
+
+.footerLeftLinks{
+    display: flex;
+    gap: 30px;
+}
+
+.companyInfo {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #e0e0e0;
+}
+
+.footerNavSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 10px 0;
+}
+
+.footerNavTitle {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #e0e0e0;
+    position: relative;
+}
+
+.footerNavTitle::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 2px;
+    background-color: #1e90ff; 
+    margin-top: 5px;
+}
+
+.footerNavList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footerNavList li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.footerNavLink {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    margin-left: 5px; 
+    transition: color 0.3s ease;
+}
+
+.footerNavLink:hover {
+    color: #1e90ff;
+}
+
+.footerNavIcon {
+    color: #b0b0b0;
+}
+
+.rightSection {
+    width: 40%;
+}
+
+.contactForm {
+    padding: 1rem;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contactFormField {
+    background-color: #333333;
+    border-radius: 4px;
+}
+
+.contactFormField .MuiOutlinedInput-root {
+    color: #f0f0f0;
+}
+
+.contactFormField .MuiInputLabel-root {
+    color: #b0b0b0;
+}
+
+.contactFormField .MuiOutlinedInput-notchedOutline {
+    border-color: #444444;
+}
+
+.contactFormField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #1e90ff;
+}
+
+.contactFormField .MuiInputLabel-root.Mui-focused {
+    color: #1e90ff;
+}
+
+button.MuiButton-containedPrimary {
+    background-color: #1e90ff;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button.MuiButton-containedPrimary:hover {
+    background-color: #005bbb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footerContent {
+        flex-direction: column;
+        align-items: center;
+    }
+    .leftSection{
+        width: 100%;
+    }
+    
+    .rightSection{
+        width: 100%;
+    }
+
+    .footerNavSection,
+    .rightSection {
+        text-align: center;
+    }
+
+    .footerNavSection {
+        margin-top: 20px;
+    }
+}
+
+.contactFormField input:-webkit-autofill,
+.contactFormField input:-webkit-autofill:hover,
+.contactFormField input:-webkit-autofill:focus,
+.contactFormField input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #333333 inset !important;
+    -webkit-text-fill-color: #f0f0f0 !important; 
+}
+
+.contactFormField input:-internal-autofill-selected {
+    background-color: #333333 !important;
+    color: #f0f0f0 !important; 
+}

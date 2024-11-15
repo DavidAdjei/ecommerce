@@ -1,6 +1,7 @@
 .filterContainer {
   position: absolute;
   left: 0;
+  z-index: 30;
   top: 5rem;
   display: block;
   background-color: #fff;

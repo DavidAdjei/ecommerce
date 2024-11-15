@@ -1,4 +1,4 @@
-const getGoogleLink = () => {
+const getGoogleLink = (role) => {
     const root = "https://accounts.google.com/o/oauth2/v2/auth";
     
     const options = {
@@ -12,10 +12,11 @@ const getGoogleLink = () => {
             "https://www.googleapis.com/auth/userinfo.email",
             "openid",
         ].join(" "),
+        state: role,
     };
 
     const qs = new URLSearchParams(options).toString();
-    return `${root}?${qs}`
-}
+    return `${root}?${qs}`;
+};
 
 export default getGoogleLink;

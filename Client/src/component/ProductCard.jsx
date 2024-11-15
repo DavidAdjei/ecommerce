@@ -7,8 +7,11 @@ import { addToCart } from "../redux/Actions/cartActions";
 import { IoCartOutline } from "react-icons/io5";
 import { setFeedback } from "../redux/Actions/productActions";
 import { addToWishlist, removeFromWishlist } from "../redux/Actions/authActions";
-
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Import useHistory for navigation
+import { createOrNavigateToRoom } from "../redux/Actions/chatActions";
+import io from 'socket.io-client';
+const socket = io('http://localhost:8000');
 
 const ProductCard = ({
   product,
@@ -17,8 +20,11 @@ const ProductCard = ({
   addToWishlist,
   user,
   wishList,
-  removeFromWishlist
+  removeFromWishlist,
+  createOrNavigateToRoom // Add this as a prop
 }) => {
+  const navigate = useNavigate(); // Initialize useHistory for navigation
+
   const isInWishlist = useMemo(() => {
     return user && wishList && wishList.some(p => p._id === product._id);
   }, [user, product, wishList]);
@@ -43,7 +49,18 @@ const ProductCard = ({
     }
   };
 
-  
+  // Handle chat with seller
+  const handleChatWithSeller = () => {
+    if (!user) {
+      setFeedback({ error: "You need to login first" });
+    } else {
+      createOrNavigateToRoom(user._id, product.sellerId).then((res) => {
+        socket.emit('joinRoom', { userId: user._id, roomId: res.roomId });
+        navigate(`/chat/${res.roomId}`);
+      });
+    }
+  };
+
   return (
     <div className="product-card">
       <Link to={`/product/${product._id}`}>
@@ -73,10 +90,15 @@ const ProductCard = ({
             )}
           </button>
         )}
+        {/* Chat with Seller Button */}
+        <button onClick={handleChatWithSeller} className="chatWithSellerButton">
+          Chat with Seller
+        </button>
       </div>
     </div>
   );
 };
+
 
 ProductCard.propTypes = {
   product: PropTypes.object,
@@ -91,5 +113,6 @@ export default connect(mapStateToProps, {
   addToCart,
   setFeedback,
   addToWishlist,
-  removeFromWishlist
+  removeFromWishlist,
+  createOrNavigateToRoom
 })(ProductCard);

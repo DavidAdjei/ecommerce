@@ -46,7 +46,7 @@ const BuyerApp = () =>{
                         <Route path="/profile" element={<UserDashboard />} />
                         <Route path="/checkout" element={<Checkout />} />
                         <Route path="/chat" element={<Chat />} />
-                        <Route path="/chat/:id" element={<Chat />} />
+                        <Route path="/chat/:id/:participant" element={<Chat />} />
                     </Route>
                     <Route path="/shop" element={<ProductsPage />} />
                     <Route path="/product/:id" element={<ProductDetails />} />

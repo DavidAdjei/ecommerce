@@ -1,18 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFeedback } from '../../../redux/Actions/productActions';
-import { createOrNavigateToRoom } from '../../../redux/Actions/chatActions';
-import io from 'socket.io-client';
+import { createOrNavigateToRoom, getChats } from '../../../redux/Actions/chatActions';
 import { useNavigate } from 'react-router-dom';
-import { AccountCircle } from '@mui/icons-material'; // Import the avatar icon from Material-UI
+import { AccountCircle } from '@mui/icons-material';
 
-const socket = io('http://localhost:8000');
 
-function ContactList({ currentChat, setCurrentChat }) {
+function ContactList({ currentChat, socket }) {
   const { contacts } = useSelector((state) => state.chatReducer);
   const { user } = useSelector(state => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    socket.on('joined room', () => {
+        dispatch(getChats(user._id));
+    });
+
+    return () => {
+        socket.off('joined room');
+    };
+}, [dispatch, user, socket]);
+
 
   const handleClick = (contactId) => {
     if (!user) {
@@ -20,7 +29,7 @@ function ContactList({ currentChat, setCurrentChat }) {
     } else {
       dispatch(createOrNavigateToRoom(user._id, contactId)).then((res) => {
         socket.emit('joinRoom', { userId: user._id, roomId: res.roomId });
-        navigate(`/chat/${res.roomId}`);
+        navigate(`/chat/${res.roomId}/${contactId}`);
       });
     }
   }

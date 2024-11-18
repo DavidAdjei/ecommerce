@@ -49,7 +49,6 @@ const OrdersContent = ({ orders }) => {
     setPage(0);
   };
 
-  // Calculate the orders to display based on current page and rows per page
   const displayedOrders = orders.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (

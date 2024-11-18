@@ -39,21 +39,21 @@ function NavBar() {
   return (
     <header className="header">
       <nav className="nav">
-        <div className="left">
-          <h1 className="nav_welcome">
-            <NavLink to="/" className="nav_logo">
+        <div className="left" style={isMobile ? {margin: 0} : {margin: '20px'}}>
+          <h1 className="nav_welcome" style={isMobile ? {margin: "18px"} : {margin: '30px'}}>
+            <NavLink to="/" className="nav_logo" >
               <img src={Logo} alt="Logo" />
             </NavLink>
           </h1>
 
-          {(!isMobile && user.role === 'buyer') || (!isMobile && !isAuth) ? (
+          {(!isMobile && user?.role === 'buyer') || (!isMobile && !isAuth) ? (
             <>
               <NavLink to="/">Home</NavLink>
               <NavLink to="/shop">Shop</NavLink>
               <NavLink to="/about">About</NavLink>
             </>
           ): (
-            !isMobile && user.role === 'seller' && (
+            !isMobile && user?.role === 'seller' && (
               <>
                 <NavLink to="/">Home</NavLink>
                 <NavLink to="/about">About</NavLink>
@@ -64,7 +64,7 @@ function NavBar() {
           )}
         </div>
 
-        <div className="right">
+        <div className="right" style={isMobile ? {margin: '8px', gap: '1rem'} : {margin: '20px'}}>
           {isMobile ? (
             <>
               {
@@ -77,18 +77,18 @@ function NavBar() {
                 )
               }
               {
-                isAuth && user.role === "buyer" && (
-                  <>
+                isAuth && user?.role === "buyer" && (
+                  <div style={{ display: "flex", gap: "1rem", alignItems: 'center' }}>
                     <Link onClick={onSearchClick}><IoIosSearch size={24} /></Link>
-                    <Link to="/profile"><IoPersonOutline size={24} /></Link>
+                    <Link to="/profile"><IoPersonOutline size={30} /></Link>
                     <Link><Notifications /></Link>
                     <Link to="/chat"><IoChatbubblesOutline size={24} /></Link>
                     <Link to="/cart"><IoCartOutline size={24} /></Link>
-                  </>
+                  </div>
                 )
               }
               {
-                isAuth && user.role === "seller" && (
+                isAuth && user?.role === "seller" && (
                   <>
                     <Link><Notifications /></Link>
                     <Link to="/chat"><IoChatbubblesOutline size={24} /></Link>

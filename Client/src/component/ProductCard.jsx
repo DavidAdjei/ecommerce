@@ -56,7 +56,7 @@ const ProductCard = ({
     } else {
       createOrNavigateToRoom(user._id, product.sellerId).then((res) => {
         socket.emit('joinRoom', { userId: user._id, roomId: res.roomId });
-        navigate(`/chat/${res.roomId}`);
+        navigate(`/chat/${res.roomId}/${product.sellerId}`);
       });
     }
   };

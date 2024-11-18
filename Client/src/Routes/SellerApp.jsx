@@ -34,7 +34,7 @@ const SellerApp = () => {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/" element={<HomePage />} />
                         <Route path="/chat" element={<Chat />} />
-                        <Route path="/chat/:id" element={<Chat />} />
+                        <Route path="/chat/:id/:participant" element={<Chat />} />
                     </Route>
                     <Route element={<PublicRoute />}>
                         <Route path="/signUp" element={<SignUp />} />

@@ -6,12 +6,6 @@
     width: 100%;
 }
 
-@media (max-width: 768px) {
-    .footer {
-        background-image: url('../assets/images/FooterMobile.png');
-    }
-}
-
 .footerContent {
     display: flex;
     justify-content: space-between;
@@ -146,6 +140,15 @@ button.MuiButton-containedPrimary:hover {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .footer {
+        background-image: url('../assets/images/FooterMobile.png');
+    }
+
+    .footerLeftLinks{
+        flex-direction: column;
+        gap: 30px;
+    }
+
     .footerContent {
         flex-direction: column;
         align-items: center;

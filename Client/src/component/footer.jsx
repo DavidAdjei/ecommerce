@@ -12,8 +12,10 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import styles from './Footer.module.css';
+import { useSelector } from 'react-redux';
 
 export default function Footer() {
+  const {isAuth} = useSelector(state => state.auth)
   return (
     <div className={styles.footer}>
       <Container>
@@ -32,10 +34,15 @@ export default function Footer() {
                     <StoreIcon className={styles.footerNavIcon} />
                     <Link to="/products" className={styles.footerNavLink}>Product</Link>
                   </li>
-                  <li>
-                    <PersonAddIcon className={styles.footerNavIcon} />
-                    <Link to="/signup" className={styles.footerNavLink}>Sign Up</Link>
-                  </li>
+                  {
+                    !isAuth && (
+                      <li>
+                        <PersonAddIcon className={styles.footerNavIcon} />
+                        <Link to="/signup" className={styles.footerNavLink}>Sign Up</Link>
+                      </li>
+                    )
+                  }
+                  
                 </ul>
               </div>
               <div className={styles.footerNavSection}>

@@ -1,7 +1,8 @@
 import React from 'react';
-import { AccountCircle } from '@mui/icons-material'; // Import the avatar icon
+import { AccountCircle } from '@mui/icons-material'; 
 
 function ChatHeader({ contact }) {
+  
   return (
     <div className="chat-header">
       {contact?.image?.url ? (
@@ -15,7 +16,7 @@ function ChatHeader({ contact }) {
       )}
       <div className="contact-info">
         <h3>{contact?.name}</h3>
-        <p className="status">online now</p>
+        <p className="status">{ contact?.online ? "Online" : `Last seen ${contact?.lastSeen}`}</p>
       </div>
     </div>
   );

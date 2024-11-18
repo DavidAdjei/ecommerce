@@ -18,6 +18,6 @@ const notificationsSchema = new mongoose.Schema({
         enum: ['read', 'unread', 'Read', 'Unread'],
         default: 'unread',
     }
-});
+}, {timestamps: true});
 
 module.exports = mongoose.model("Notifications", notificationsSchema)

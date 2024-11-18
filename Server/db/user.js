@@ -26,6 +26,13 @@ const userSchema = new Schema({
         public_id: { type: String, default: "" },
         url: { type: String, default: "" }
     },
+    online: {
+        type: Boolean,
+        default: false,
+    },
+    lastSeen:{
+        type: Date
+    },
     verified: { type: Boolean, default: false },
     address: addressSchema,
     phone: { type: String },

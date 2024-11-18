@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 
 function ChatInput({ onSendMessage }) {
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('text');
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (message.trim()) {
-      onSendMessage(message);
+      onSendMessage(message, messageType);
       setMessage('');
     }
   };

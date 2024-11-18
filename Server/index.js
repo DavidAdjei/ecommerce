@@ -13,6 +13,7 @@ const categoryRoutes = require("./Routes/categories");
 const wishlistRoutes = require("./Routes/wishlist");
 const sellerRoutes = require("./Routes/seller");
 const {Server} = require("socket.io");
+const { socket } = require("./Sockets/socket");
 
 const app = express();
 const server = http.createServer(app); // Use 'server' for Socket.IO binding
@@ -54,23 +55,8 @@ app.use("/wishlist", wishlistRoutes);
 app.use("/seller", sellerRoutes);
 app.use("/chat", chatRoutes);
 
-// Socket.IO configuration
-io.on("connection", (socket) => {
-    console.log("New client connected", socket.id);
+socket(io);
 
-    socket.on("joinRoom", ({ userId, roomId }) => {
-        socket.join(roomId);
-    });
-
-    socket.on("chatMessage", ({ message }) => {
-        console.log({ message });
-        socket.to(message.roomId).emit("newMessage", message); // Emit message to all clients in room
-    });
-
-    socket.on("disconnect", () => {
-        console.log("Client disconnected", socket.id);
-    });
-});
 
 // Server
 const port = process.env.PORT || 8000;

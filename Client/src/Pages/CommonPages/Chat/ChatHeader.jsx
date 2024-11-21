@@ -1,10 +1,14 @@
 import React from 'react';
 import { AccountCircle } from '@mui/icons-material'; 
+import { useMediaQuery } from '@mui/material';
+import Back from '../../../features/back';
 
 function ChatHeader({ contact }) {
-  
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   return (
     <div className="chat-header">
+      {isMobile && <Back/>}
       {contact?.image?.url ? (
         <img 
           src={contact.image.url} 

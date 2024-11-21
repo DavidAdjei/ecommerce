@@ -3,6 +3,7 @@ const Chat = require('../db/chat');
 const User = require('../db/user');
 const fs = require('fs');
 const path = require('path');
+const { uploadMultipleImages } = require('../helpers/upload');
 
 exports.createRoom = async (req, res) => {
     const { buyerId, sellerId } = req.body;
@@ -19,7 +20,6 @@ exports.createRoom = async (req, res) => {
     }
 };
 
-// Controller to get user rooms
 exports.getUserRooms = async (req, res) => {
     const userId = req.params.userId;
     try {
@@ -45,24 +45,56 @@ exports.getUserRooms = async (req, res) => {
     }
 };
 
-exports.sendMessage = async (req, res, io) => {
-    const { roomId, userId, message, messageType } = req.body;
-    const newMessage = new Chat({
-        roomId,
-        userId,
-        message,
-        messageType
-    });
-
+exports.uploadImages = async (req, res) => {
     try {
-        const savedMessage = await newMessage.save();
-        res.json({ savedMessage });
+        const { files } = req;
+        if (!files || files.length === 0) {
+            return res.status(400).json({ error: 'No files uploaded' });
+        }
+
+        const result = await uploadMultipleImages(files);
+        if (!result || !result.imageUrls) {
+            return res.status(500).json({ error: 'Failed to upload images' });
+        }
+
+        return res.status(200).json({ message: "Images uploaded successfully", imageUrls: result.imageUrls });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: err.message });
     }
 };
 
-// Controller to get messages in a room
+
+
+exports.sendMessage = async (req, res, io) => {
+    const { roomId, userId, message, messageType } = req.body;
+    console.log({message});
+    if (!roomId || !userId || !message) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    if((messageType === 'image' && !message.images) || (messageType === "image" && message.images.length === 0)) {
+        return res.status(400).json({ error: 'Missing image URLs' });
+    }
+    const newMessage = new Chat({
+        roomId,
+        userId,
+        message: message.message,
+        messageType,
+        attachmentUrls: messageType === 'image' ? message.images : undefined,
+        imageCaption: messageType === 'image' ? message.caption : undefined,
+    });
+    try {
+        const savedMessage = await newMessage.save(); 
+        res.status(200).json({ savedMessage }); 
+        io.to(roomId).emit('chatMessage', savedMessage); 
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+  
 exports.getMessages = async (req, res) => {
     try {
         const messages = await Chat.find({ roomId: req.params.roomId });
@@ -72,28 +104,22 @@ exports.getMessages = async (req, res) => {
     }
 };
 
-// Controller to get the number of unread messages for a user
 exports.getUnreadMessagesCount = async (req, res) => {
   const userId = req.params.userId;
 
   try {
-      // Find all messages in rooms the user is part of
       const messages = await Chat.find({ 'users': userId });
 
-      // Filter messages that have not been seen by the user
       const unreadMessages = messages.filter((message) => {
           return !message.seenBy.includes(userId) && !message.isDeleted;
       });
 
-      // Return the count of unread messages
       res.json({ unreadMessagesCount: unreadMessages.length });
   } catch (err) {
       res.status(500).json({ error: err.message });
   }
 };
 
-
-// Controller to delete a message
 exports.deleteMessage = async (req, res) => {
     const { messageId } = req.params;
     try {
@@ -110,7 +136,6 @@ exports.deleteMessage = async (req, res) => {
     }
 };
 
-// Controller to mark a message as seen
 exports.markAsSeen = async (req, res) => {
     const { messageId, userId } = req.body;
     try {
@@ -130,7 +155,6 @@ exports.markAsSeen = async (req, res) => {
     }
 };
 
-// Controller to mark a message as delivered
 exports.markAsDelivered = async (req, res) => {
     const { messageId, userId } = req.body;
     try {

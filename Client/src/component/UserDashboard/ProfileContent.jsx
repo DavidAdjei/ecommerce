@@ -15,7 +15,6 @@ import { connect } from "react-redux";
 import { editUser, uploadImage } from "../../redux/Actions/authActions";
 import { setFeedback } from "../../redux/Actions/productActions";
 import Address from "./Address";
-import { useMediaQuery } from "@mui/material";
 
 const ProfileContent = ({ user, editUser, setFeedback, uploadImage }) => {
   const [formData, setFormData] = useState({

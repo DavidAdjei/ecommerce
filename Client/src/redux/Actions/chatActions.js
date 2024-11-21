@@ -45,3 +45,27 @@ export const getChats = (userId) => {
         }
     }
 }
+
+export const uploadImages = (formData) => async () => {
+    try {
+      console.log({ formData });
+  
+      const response = await axios.post(`${process.env.REACT_APP_SERVER}/chat/uploadImages`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+  
+      if (response.data && !response.data.error) {
+        return response.data; 
+      } else {
+        const error = response.data.error || "Image upload failed";
+        return Promise.reject(error);
+      }
+    } catch (err) {
+      const error = err.response?.data?.error || err.message;
+      console.log(error)
+      return Promise.reject(error);
+    }
+  };
+  

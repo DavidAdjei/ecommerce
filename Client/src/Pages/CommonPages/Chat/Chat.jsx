@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 import './chat.css';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { fetchMessages, getChats, setMessages } from '../../../redux/Actions/chatActions';
+import { fetchMessages, getChats, setMessages, uploadImages } from '../../../redux/Actions/chatActions';
 import { useMediaQuery } from '@mui/material';
 
 const socket = io('http://localhost:8000');
@@ -55,21 +55,61 @@ function ChatRoom() {
     };
   }, [id, user, dispatch, participant]);  
 
+  const handleImagesUpload = async (images) => {
+    if (images.length === 0) {
+      throw new Error("No images selected");
+    }
+  
+    const formData = new FormData();
+  
+    for (let i = 0; i < images.length; i++) {
+      formData.append('images', images[i]);
+    }
+  
+    try {
+      const res = await dispatch(uploadImages(formData)); // Wait for the dispatch to resolve
+      console.log({ res });
+      const { imageUrls } = res;
+      return imageUrls; // Return the URLs from the response
+    } catch (error) {
+      console.log(error);
+      throw error; // Re-throw the error to propagate it to the caller
+    }
+  };
+  
+
   const handleSendMessage = async (message, messageType) => {
     try {
-      const { data } = await axios.post(`${process.env.REACT_APP_SERVER}/chat/sendMessage`, {
-        message,
-        messageType,
-        roomId: currentChat,
-        userId: user._id,
-      });
-      socket.emit('chatMessage', { message: data.savedMessage });
-      dispatch(setMessages([...messages, data.savedMessage]));
-
+      if (messageType === "image") {
+        const imageUrls = await handleImagesUpload(message.images);
+        message.images = imageUrls; // Update the message with uploaded image URLs
+  
+        const { data } = await axios.post(`${process.env.REACT_APP_SERVER}/chat/sendMessage`, {
+          roomId: currentChat,
+          userId: user._id,
+          message,
+          messageType,
+        });
+  
+        socket.emit('chatMessage', { message: data.savedMessage });
+        dispatch(setMessages([...messages, data.savedMessage]));
+      } else {
+        const { data } = await axios.post(`${process.env.REACT_APP_SERVER}/chat/sendMessage`, {
+          roomId: currentChat,
+          userId: user._id,
+          message,
+          messageType,
+        });
+  
+        socket.emit('chatMessage', { message: data.savedMessage });
+        dispatch(setMessages([...messages, data.savedMessage]));
+      }
     } catch (error) {
       console.log(error);
     }
   };
+  
+  
 
   return (
     <div className="chat-room">

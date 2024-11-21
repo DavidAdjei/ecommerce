@@ -4,7 +4,7 @@
   }
   
   .contact-list {
-    width: 300px;
+    min-width: 300px;
     padding: 20px;
     background-color: #f0f4f8;
     border-right: 1px solid #ddd;
@@ -55,6 +55,7 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    background-color: #e9edf3;
   }
   
   .chat-header {
@@ -66,37 +67,74 @@
     background-color: #f7f9fc;
   }
   
+  .image-message {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .message-image {
+    max-width: 100%;
+    border-radius: 5px;
+    margin: 5px 0;
+  }
+  
+  .image-caption {
+    font-style: italic;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+  
+  .message.status {
+    font-size: 0.8em;
+    color: gray;
+    text-align: right;
+    margin-top: 5px;
+  }
+
+  .status{
+    font-size: 0.8rem;
+    color: grey;
+  }
   
   .chat-messages {
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
-    background-color: #e9edf3;
   }
-  
+
   .message {
-    max-width: 70%;
+    margin-bottom: 10px;
     padding: 10px;
     border-radius: 10px;
-    margin-bottom: 10px;
+    max-width: 55%;
+    word-wrap: break-word;
   }
   
   .message.own {
-    background-color: #cce4ff;
-    margin-left: auto;
+    align-self: flex-end;
+    background-color: #d1f5d3; /* Light green for user's messages */
+    color: #000;
     text-align: right;
+  }
+
+  .message.own {
+    margin-left: auto;
+  }
+  
+  .message.other {
+    align-self: flex-start;
+    background-color: #f1f0f0;
+    color: #000;
   }
   
   .message p {
-    margin: 0;
+    margin: 5px 0;
   }
   
   .chat-input {
     display: flex;
-    align-items: center;
-    padding: 10px;
-    border-top: 1px solid #ddd;
-    background-color: #f7f9fc;
+    flex-direction: column;
+    gap: 10px;
   }
   
   .chat-input input {
@@ -106,6 +144,56 @@
     border: 1px solid #ccc;
     margin-right: 10px;
   }
+
+  .input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .image-slider {
+    position: relative;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .image-preview {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .image-preview img {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .delete-image-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+  }
+  
+  .caption-input {
+    width: 100%;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
   
   @media (max-width: 768px) {
     .chat-room {

@@ -12,19 +12,21 @@ const ChatMessageSchema = new mongoose.Schema({
   },
   message: {
     type: String,
-    required: false,
+    required: function () {
+      return this.messageType === 'text'; 
+    },
   },
   messageType: {
     type: String,
-    enum: ['text', 'image', 'video', 'file'], 
+    enum: ['text', 'image', 'video', 'file'],   
     default: 'text',
   },
-  attachmentUrl: {
+  attachmentUrls: [{
     type: String, 
     required: function () {
       return this.messageType !== 'text'; 
     },
-  },
+  }],
   seenBy: {
     type: [String], 
     default: [],
@@ -36,6 +38,9 @@ const ChatMessageSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean, 
     default: false,
+  },
+  imageCaption:{
+    type: String,
   },
   deletedFor: {
     type: [String], 
